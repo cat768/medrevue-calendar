@@ -82,6 +82,8 @@ def call_groq(doc_text: str, api_key: str, today: str) -> list:
     payload = {
         "model": GROQ_MODEL,
         "temperature": 0,
+        "max_completion_tokens": 8192,
+        "reasoning_effort": "low",
         "messages": [
             {"role": "system", "content": SYSTEM_PROMPT},
             {
