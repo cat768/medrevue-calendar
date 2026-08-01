@@ -17,6 +17,7 @@ import hashlib
 import json
 import os
 import sys
+import time
 import uuid
 from datetime import datetime, timezone as dt_timezone
 from zoneinfo import ZoneInfo
@@ -28,6 +29,15 @@ STATE_FILE = "docs/.last_hash"
 ICS_FILE = "docs/calendar.ics"
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 GROQ_MODEL = "openai/gpt-oss-120b"  # current Groq general-purpose model (2026)
+
+# Groq's free tier caps openai/gpt-oss-120b at 8,000 tokens/minute, shared
+# between input + reserved output, PER REQUEST. Rather than truncate the doc,
+# we split it into chunks small enough that each request comfortably fits,
+# and merge the results. This scales as the season's schedule grows instead
+# of breaking once the doc passes a few thousand tokens.
+CHUNK_MAX_CHARS = 4000
+MAX_COMPLETION_TOKENS = 2048
+CHUNK_DELAY_SECONDS = 12  # spacing between chunk calls, stays under free-tier RPM/TPM
 
 SYSTEM_PROMPT = """You extract rehearsal schedule events from raw text copied from a \
 Google Doc. Output ONLY a JSON array, no prose, no markdown fences.
@@ -47,6 +57,10 @@ month/day relative to today.
 - Skip rows that are clearly headers, not actual scheduled sessions.
 - If you cannot find any valid events, output an empty JSON array: []
 - Do not invent events that are not supported by the text.
+- IMPORTANT: you are being shown one fragment of a larger document, not the \
+whole thing. Only extract events that are fully described within this \
+fragment (a clear date/time/location). If a fragment starts or ends mid-table \
+or mid-sentence, ignore that partial row rather than guessing its contents.
 """
 
 
@@ -59,6 +73,22 @@ def fetch_doc_text(doc_id: str) -> str:
             "Is it shared as 'Anyone with the link can view'?"
         )
     return resp.text
+
+
+# The doc has a compact date/time/location summary up top, followed by
+# exhaustive per-rehearsal cast/song/blocking breakdowns the calendar doesn't
+# need. Sending all of it burns most of the free-tier TPM budget on tokens
+# that never affect the output. Cut at the first detailed-rehearsal heading;
+# if the doc gets restructured and the marker disappears, fall back to the
+# full text rather than silently dropping something we don't recognize.
+DETAIL_SECTION_MARKER = "Rehearsal #1"
+
+
+def trim_to_summary(doc_text: str) -> str:
+    idx = doc_text.find(DETAIL_SECTION_MARKER)
+    if idx == -1:
+        return doc_text
+    return doc_text[:idx]
 
 
 def content_hash(text: str) -> str:
@@ -82,7 +112,11 @@ def call_groq(doc_text: str, api_key: str, today: str) -> list:
     payload = {
         "model": GROQ_MODEL,
         "temperature": 0,
-        "max_completion_tokens": 8192,
+        # Free-tier TPM for this model is tight (~8K tokens/min per Groq's
+        # published limits) and this reservation counts against it up front,
+        # on top of input tokens. Keep it modest — trim_to_summary() keeps
+        # input small enough that this is still plenty for the JSON output.
+        "max_completion_tokens": 4096,
         "reasoning_effort": "low",
         "messages": [
             {"role": "system", "content": SYSTEM_PROMPT},
@@ -101,7 +135,12 @@ def call_groq(doc_text: str, api_key: str, today: str) -> list:
         json=payload,
         timeout=60,
     )
-    resp.raise_for_status()
+    if not resp.ok:
+        # Surface Groq's actual error body (e.g. exact TPM "Requested vs
+        # Limit" numbers) instead of a bare status code — saves guessing.
+        raise RuntimeError(
+            f"Groq API error {resp.status_code}: {resp.text[:1000]}"
+        )
     raw = resp.json()["choices"][0]["message"]["content"].strip()
 
     # Defensive cleanup in case the model wraps output in fences anyway
@@ -181,7 +220,7 @@ def main():
         )
         return
 
-    doc_text = fetch_doc_text(doc_id)
+    doc_text = trim_to_summary(fetch_doc_text(doc_id))
     new_hash = content_hash(doc_text)
     old_hash = load_last_hash()
 
