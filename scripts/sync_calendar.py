@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Fetch a public Google Doc, detect changes since last run, parse the rehearsal
-schedule with Groq, and (re)build an ICS calendar file.
+schedule with Groq in chunks, and (re)build an ICS calendar file.
 
 Required env vars:
   GOOGLE_DOC_ID   - the ID from the doc URL (the long string between /d/ and /edit)
@@ -28,16 +28,11 @@ from icalendar import Calendar, Event
 STATE_FILE = "docs/.last_hash"
 ICS_FILE = "docs/calendar.ics"
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
-GROQ_MODEL = "openai/gpt-oss-120b"  # current Groq general-purpose model (2026)
+GROQ_MODEL = "openai/gpt-oss-120b"
 
-# Groq's free tier caps openai/gpt-oss-120b at 8,000 tokens/minute, shared
-# between input + reserved output, PER REQUEST. Rather than truncate the doc,
-# we split it into chunks small enough that each request comfortably fits,
-# and merge the results. This scales as the season's schedule grows instead
-# of breaking once the doc passes a few thousand tokens.
-CHUNK_MAX_CHARS = 4000
-MAX_COMPLETION_TOKENS = 2048
-CHUNK_DELAY_SECONDS = 12  # spacing between chunk calls, stays under free-tier RPM/TPM
+# Chunking settings to strictly respect Groq's free tier rate limits
+CHUNK_MAX_CHARS = 3500
+CHUNK_DELAY_SECONDS = 12  # Spacing between chunk calls to stay under TPM/RPM
 
 SYSTEM_PROMPT = """You extract rehearsal schedule events from raw text copied from a \
 Google Doc. Output ONLY a JSON array, no prose, no markdown fences.
@@ -57,10 +52,9 @@ month/day relative to today.
 - Skip rows that are clearly headers, not actual scheduled sessions.
 - If you cannot find any valid events, output an empty JSON array: []
 - Do not invent events that are not supported by the text.
-- IMPORTANT: you are being shown one fragment of a larger document, not the \
-whole thing. Only extract events that are fully described within this \
-fragment (a clear date/time/location). If a fragment starts or ends mid-table \
-or mid-sentence, ignore that partial row rather than guessing its contents.
+- IMPORTANT: You may be shown a fragment of a larger document. Only extract \
+events that are clearly stated in this fragment. If a line or table entry is cut off, \
+ignore it.
 """
 
 
@@ -73,22 +67,6 @@ def fetch_doc_text(doc_id: str) -> str:
             "Is it shared as 'Anyone with the link can view'?"
         )
     return resp.text
-
-
-# The doc has a compact date/time/location summary up top, followed by
-# exhaustive per-rehearsal cast/song/blocking breakdowns the calendar doesn't
-# need. Sending all of it burns most of the free-tier TPM budget on tokens
-# that never affect the output. Cut at the first detailed-rehearsal heading;
-# if the doc gets restructured and the marker disappears, fall back to the
-# full text rather than silently dropping something we don't recognize.
-DETAIL_SECTION_MARKER = "Rehearsal #1"
-
-
-def trim_to_summary(doc_text: str) -> str:
-    idx = doc_text.find(DETAIL_SECTION_MARKER)
-    if idx == -1:
-        return doc_text
-    return doc_text[:idx]
 
 
 def content_hash(text: str) -> str:
@@ -108,21 +86,39 @@ def save_hash(h: str) -> None:
         f.write(h)
 
 
-def call_groq(doc_text: str, api_key: str, today: str) -> list:
+def chunk_text(text: str, max_chars: int = CHUNK_MAX_CHARS) -> list[str]:
+    """Splits full text into chunks along line boundaries."""
+    lines = text.splitlines(keepends=True)
+    chunks = []
+    current_chunk = []
+    current_len = 0
+
+    for line in lines:
+        if current_len + len(line) > max_chars and current_chunk:
+            chunks.append("".join(current_chunk))
+            current_chunk = [line]
+            current_len = len(line)
+        else:
+            current_chunk.append(line)
+            current_len += len(line)
+
+    if current_chunk:
+        chunks.append("".join(current_chunk))
+
+    return chunks
+
+
+def call_groq_single_chunk(chunk_text: str, api_key: str, today: str) -> list:
     payload = {
         "model": GROQ_MODEL,
         "temperature": 0,
-        # Free-tier TPM for this model is tight (~8K tokens/min per Groq's
-        # published limits) and this reservation counts against it up front,
-        # on top of input tokens. Keep it modest — trim_to_summary() keeps
-        # input small enough that this is still plenty for the JSON output.
-        "max_completion_tokens": 4096,
+        "max_completion_tokens": 2048,
         "reasoning_effort": "low",
         "messages": [
             {"role": "system", "content": SYSTEM_PROMPT},
             {
                 "role": "user",
-                "content": f"Today's date is {today}.\n\nDoc text:\n{doc_text}",
+                "content": f"Today's date is {today}.\n\nDoc text fragment:\n{chunk_text}",
             },
         ],
     }
@@ -136,14 +132,11 @@ def call_groq(doc_text: str, api_key: str, today: str) -> list:
         timeout=60,
     )
     if not resp.ok:
-        # Surface Groq's actual error body (e.g. exact TPM "Requested vs
-        # Limit" numbers) instead of a bare status code — saves guessing.
         raise RuntimeError(
             f"Groq API error {resp.status_code}: {resp.text[:1000]}"
         )
     raw = resp.json()["choices"][0]["message"]["content"].strip()
 
-    # Defensive cleanup in case the model wraps output in fences anyway
     if raw.startswith("```"):
         raw = raw.strip("`")
         if raw.lower().startswith("json"):
@@ -160,13 +153,34 @@ def call_groq(doc_text: str, api_key: str, today: str) -> list:
     return events
 
 
+def call_groq_full_doc(full_text: str, api_key: str, today: str) -> list:
+    chunks = chunk_text(full_text)
+    total_chunks = len(chunks)
+    all_events = []
+
+    print(f"Processing full document across {total_chunks} chunk(s)...")
+
+    for i, chunk in enumerate(chunks, 1):
+        print(f" -> Processing chunk {i}/{total_chunks}...")
+        events = call_groq_single_chunk(chunk, api_key, today)
+        all_events.extend(events)
+
+        if i < total_chunks:
+            print(f"    Waiting {CHUNK_DELAY_SECONDS}s to respect Groq rate limits...")
+            time.sleep(CHUNK_DELAY_SECONDS)
+
+    return all_events
+
+
 def build_ics(events: list, tz_name: str, cal_name: str, doc_id: str) -> bytes:
     tz = ZoneInfo(tz_name)
     cal = Calendar()
-    cal.add("prodid", "-//Rehearsal Schedule Sync//animeisamistake.com//")
+    cal.add("prodid", "-//Rehearsal Schedule Sync//[animeisamistake.com//](https://animeisamistake.com//)")
     cal.add("version", "2.0")
     cal.add("x-wr-calname", cal_name)
     cal.add("x-wr-timezone", tz_name)
+
+    seen_signatures = set()
 
     for ev in events:
         try:
@@ -177,11 +191,15 @@ def build_ics(events: list, tz_name: str, cal_name: str, doc_id: str) -> bytes:
                 f"{ev['date']} {ev['end_time']}", "%Y-%m-%d %H:%M"
             ).replace(tzinfo=tz)
         except (KeyError, ValueError):
-            continue  # skip malformed rows rather than crash the whole run
+            continue
 
-        # Stable UID so re-syncing the same event updates it instead of duplicating
-        uid_seed = f"{ev['date']}|{ev['start_time']}|{ev.get('title','')}"
-        uid = str(uuid.uuid5(uuid.NAMESPACE_URL, f"{doc_id}|{uid_seed}"))
+        # Prevent duplicate events from chunk boundary overlaps
+        dedup_key = f"{ev['date']}|{ev['start_time']}|{ev['end_time']}|{ev.get('title','')}"
+        if dedup_key in seen_signatures:
+            continue
+        seen_signatures.add(dedup_key)
+
+        uid = str(uuid.uuid5(uuid.NAMESPACE_URL, f"{doc_id}|{dedup_key}"))
 
         vevent = Event()
         vevent.add("uid", f"{uid}@animeisamistake.com")
@@ -214,24 +232,22 @@ def main():
     if today_date > cutoff:
         print(
             f"Today ({today_date}) is past the cutoff ({cutoff}). "
-            "Sync is retired — doing nothing. "
-            "(Delete/disable .github/workflows/update-calendar.yml to stop "
-            "the workflow from even running.)"
+            "Sync is retired — doing nothing."
         )
         return
 
-    doc_text = trim_to_summary(fetch_doc_text(doc_id))
-    new_hash = content_hash(doc_text)
+    full_doc_text = fetch_doc_text(doc_id)
+    new_hash = content_hash(full_doc_text)
     old_hash = load_last_hash()
 
     if new_hash == old_hash and os.path.exists(ICS_FILE):
         print("No changes detected. Skipping Groq call.")
         return
 
-    print("Change detected (or first run) — parsing with Groq...")
+    print("Change detected — parsing full Google Doc with Groq...")
     today = datetime.now(ZoneInfo(tz_name)).strftime("%Y-%m-%d")
-    events = call_groq(doc_text, api_key, today)
-    print(f"Parsed {len(events)} events.")
+    events = call_groq_full_doc(full_doc_text, api_key, today)
+    print(f"Parsed {len(events)} total unique event(s).")
 
     ics_bytes = build_ics(events, tz_name, cal_name, doc_id)
     os.makedirs(os.path.dirname(ICS_FILE), exist_ok=True)
@@ -239,7 +255,7 @@ def main():
         f.write(ics_bytes)
 
     save_hash(new_hash)
-    print("Calendar updated.")
+    print("Calendar successfully updated.")
 
 
 if __name__ == "__main__":
