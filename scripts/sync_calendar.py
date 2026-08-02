@@ -1,7 +1,20 @@
 #!/usr/bin/env python3
 """
 Fetch a public Google Doc, detect changes since last run, parse the rehearsal
-schedule with Groq in chunks, and (re)build an ICS calendar file.
+schedule with Groq in chunks, merge any duplicate write-ups of the same
+session, resolve locations into something you could actually navigate to,
+and (re)build an ICS calendar file.
+
+Location handling is deliberately two-tier and cached to disk:
+  1. Cheap check against OpenStreetMap's free Nominatim geocoder -- if the
+     raw text already resolves to somewhere sensible near Adelaide, leave it
+     alone.
+  2. Otherwise, ask a Groq "compound-mini" model (same free API key, built-in
+     web search) to look it up against Adelaide University's current site and
+     return a best-effort, honestly-confidence-rated resolution. Low
+     confidence is never turned into a confident-sounding guess.
+Results are cached in docs/.location_cache.json so repeat hourly runs barely
+touch either API.
 
 Required env vars:
   GOOGLE_DOC_ID   - the ID from the doc URL (the long string between /d/ and /edit)
@@ -25,11 +38,21 @@ from zoneinfo import ZoneInfo
 
 import requests
 from icalendar import Calendar, Event
+from tqdm import tqdm
 
 STATE_FILE = "docs/.last_hash"
 ICS_FILE = "docs/calendar.ics"
+LOCATION_CACHE_FILE = "docs/.location_cache.json"
 GROQ_URL = "https://api.groq.com/openai/v1/chat/completions"
 GROQ_MODEL = "openai/gpt-oss-120b"
+
+# Compound systems bolt built-in web search onto an underlying Groq model.
+# Only used for the small number of unique, ambiguous *locations* per run
+# (not the main schedule extraction) -- like GROQ_MODEL, Groq occasionally
+# deprecates/renames these; check console.groq.com/docs/compound if this
+# starts erroring. A failure here is non-fatal: resolve_location() falls
+# back to the raw text rather than aborting the whole sync.
+GROQ_LOCATION_MODEL = "groq/compound-mini"
 
 # Chunking settings to strictly respect Groq's free tier rate limits
 CHUNK_MAX_CHARS = 3500
@@ -41,6 +64,16 @@ MAX_COMPLETION_TOKENS = 4096  # Generous headroom: gpt-oss-120b spends part of t
 MAX_SPLIT_DEPTH = 2        # How many times a chunk may be halved if truncated
 MIN_SPLIT_CHARS = 600      # Don't try to split below this size
 
+# Location resolution settings
+NOMINATIM_URL = "https://nominatim.openstreetmap.org/search"
+NOMINATIM_USER_AGENT = "medrevue-calendar-sync/1.0 (github.com/cat768/medrevue-calendar)"
+NOMINATIM_DELAY_SECONDS = 1.1     # Nominatim's usage policy caps free use at 1 req/sec
+LOCATION_LLM_DELAY_SECONDS = 2.0  # Courtesy gap between compound-mini lookups
+# Rough bounding box around the North Terrace campus, used only to *bias*
+# (not restrict -- bounded=0) Nominatim towards campus buildings when a name
+# is ambiguous.
+ADELAIDE_UNI_VIEWBOX = "138.598,-34.913,138.613,-34.928"
+
 SYSTEM_PROMPT = """You extract rehearsal schedule events from raw text copied from a \
 Google Doc. Output ONLY a JSON array, no prose, no markdown fences.
 
@@ -51,7 +84,13 @@ Each element must have exactly these keys:
 or reuse start_time + 2 hours
   "title": short string, e.g. "Full Cast Rehearsal" or "Act 2 Scene 3"
   "location": string, empty string if not given
-  "notes": string, empty string if not given
+  "notes": string, empty string if not given -- pull together whatever would \
+actually help someone show up prepared: what's being worked on (specific \
+songs/scenes/acts), who needs to be there if it's not the full cast, \
+call/warm-up times if they differ from the main block, and caveats like \
+"may be cancelled" or "TBC". A sentence or two is plenty -- don't pad it out, \
+and don't include shoutouts, jokes, or baking rosters, that's not what people \
+need from a calendar reminder.
 
 Rules:
 - If the year is not stated, assume the nearest upcoming occurrence of that \
@@ -59,10 +98,50 @@ month/day relative to today.
 - Skip rows that are clearly headers, not actual scheduled sessions.
 - If you cannot find any valid events, output an empty JSON array: []
 - Do not invent events that are not supported by the text.
+- Copy "location" exactly as written in the source (nickname, room code, \
+whatever it says). Don't try to expand abbreviations or guess a real address \
+yourself -- a separate step handles turning it into something you could \
+actually navigate to, and it needs your raw text unchanged to do that well.
+- Some schedules describe the same session twice: once in a quick overview \
+list, again later as a fuller write-up with its own time breakdown. If you \
+can see both for the same date/time within this fragment, extract it once, \
+using the fuller version. (If they land in different fragments you won't be \
+able to tell -- that's fine, a later step merges same-timeslot duplicates \
+across the whole document.)
 - IMPORTANT: You may be shown a fragment of a larger document. Only extract \
 events that are clearly stated in this fragment. If a line or table entry is cut off, \
 ignore it.
 """
+
+LOCATION_SYSTEM_PROMPT = """You help resolve short, informal venue names from a \
+university theatre society's rehearsal schedule into a specific, real-world \
+location description that would actually help someone find the place -- \
+something concrete enough to plug into a maps app or to know which door to \
+walk in.
+
+The society rehearses at Adelaide University's North Terrace campus (Adelaide, \
+South Australia) -- formed from the 2026 merger of the University of Adelaide \
+and University of South Australia -- plus occasional off-campus venues. The \
+raw text you're given is usually a short nickname, room code, or building \
+abbreviation used casually by students, not an official address, and venues \
+sometimes get renamed or relocated over time.
+
+Use web search to check adelaide.edu.au (or wherever Adelaide University's \
+current site/campus map lives now) when the raw text alone wouldn't be enough \
+to find the place. Prefer current, official sources over guessing. If the raw \
+text is already a specific, unambiguous place (e.g. a full address, or a \
+well-known standalone venue), you don't need to search -- just confirm it.
+
+Respond with ONLY a JSON object, no prose, no markdown fences:
+{
+  "resolved": "<best specific, mappable location description, or null>",
+  "confidence": "high" | "medium" | "low"
+}
+
+Being vague-but-correct beats being precise-but-wrong: if you can't find a \
+confident, current answer, set "resolved" to null (or use "low" confidence) \
+rather than inventing a specific gate number, room code, or address you're \
+not sure about."""
 
 
 def fetch_doc_text(doc_id: str) -> str:
@@ -162,7 +241,7 @@ def call_groq_single_chunk(
 
         if resp.status_code == 429:
             wait = _parse_retry_wait(resp) + 2  # small buffer on top of Groq's estimate
-            print(
+            tqdm.write(
                 f"    Rate limited (attempt {attempt}/{max_retries}), "
                 f"waiting {wait:.1f}s before retry..."
             )
@@ -195,7 +274,7 @@ def call_groq_single_chunk(
                 "fragment is already too small to split further. Consider "
                 "raising MAX_COMPLETION_TOKENS."
             )
-        print(
+        tqdm.write(
             f"    Output truncated at depth {_depth}, splitting fragment "
             f"({len(chunk_text)} chars) in half and retrying..."
         )
@@ -235,16 +314,220 @@ def call_groq_full_doc(full_text: str, api_key: str, today: str) -> list:
 
     print(f"Processing full document across {total_chunks} chunk(s)...")
 
-    for i, chunk in enumerate(chunks, 1):
-        print(f" -> Processing chunk {i}/{total_chunks}...")
-        events = call_groq_single_chunk(chunk, api_key, today)
-        all_events.extend(events)
+    with tqdm(total=total_chunks, desc="Parsing rehearsal schedule", unit="chunk") as bar:
+        for i, chunk in enumerate(chunks, 1):
+            events = call_groq_single_chunk(chunk, api_key, today)
+            all_events.extend(events)
+            bar.update(1)
 
-        if i < total_chunks:
-            print(f"    Waiting {CHUNK_DELAY_SECONDS}s to respect Groq rate limits...")
-            time.sleep(CHUNK_DELAY_SECONDS)
+            if i < total_chunks:
+                bar.set_postfix_str(f"cooling down {CHUNK_DELAY_SECONDS}s (rate limit)")
+                time.sleep(CHUNK_DELAY_SECONDS)
+                bar.set_postfix_str("")
 
     return all_events
+
+
+def load_location_cache() -> dict:
+    if os.path.exists(LOCATION_CACHE_FILE):
+        try:
+            with open(LOCATION_CACHE_FILE, "r") as f:
+                return json.load(f)
+        except (json.JSONDecodeError, OSError):
+            return {}
+    return {}
+
+
+def save_location_cache(cache: dict) -> None:
+    os.makedirs(os.path.dirname(LOCATION_CACHE_FILE), exist_ok=True)
+    with open(LOCATION_CACHE_FILE, "w") as f:
+        json.dump(cache, f, indent=2, sort_keys=True)
+
+
+def looks_directly_mappable(raw_location: str, session: requests.Session) -> bool:
+    """Quick, free check via OpenStreetMap Nominatim: does this string, as
+    written, already resolve to somewhere near Adelaide? If so there's no
+    need to go figure out what it 'really' means -- a maps app already will."""
+    try:
+        resp = session.get(
+            NOMINATIM_URL,
+            params={
+                "q": raw_location,
+                "format": "jsonv2",
+                "limit": 1,
+                "countrycodes": "au",
+                "viewbox": ADELAIDE_UNI_VIEWBOX,
+                "bounded": 0,
+            },
+            headers={"User-Agent": NOMINATIM_USER_AGENT},
+            timeout=15,
+        )
+        if not resp.ok:
+            return False
+        results = resp.json()
+        if not results:
+            return False
+        display = results[0].get("display_name", "")
+        return "South Australia" in display or "Adelaide" in display
+    except (requests.RequestException, ValueError):
+        return False
+
+
+def resolve_via_groq_search(raw_location: str, api_key: str) -> dict | None:
+    """Ask a web-search-capable Groq model to resolve an ambiguous location.
+    Returns a dict like {"resolved": ..., "confidence": ...} or None if the
+    call failed/was unusable -- this is a best-effort enhancement, never
+    allowed to break the sync."""
+    payload = {
+        "model": GROQ_LOCATION_MODEL,
+        "temperature": 0,
+        "messages": [
+            {"role": "system", "content": LOCATION_SYSTEM_PROMPT},
+            {"role": "user", "content": f'Raw location text: "{raw_location}"'},
+        ],
+    }
+    try:
+        resp = requests.post(
+            GROQ_URL,
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            },
+            json=payload,
+            timeout=60,
+        )
+        if not resp.ok:
+            tqdm.write(
+                f"    Location lookup for \"{raw_location}\" failed "
+                f"(HTTP {resp.status_code}), leaving it unresolved."
+            )
+            return None
+
+        raw = resp.json()["choices"][0]["message"]["content"].strip()
+        if raw.startswith("```"):
+            raw = raw.strip("`")
+            if raw.lower().startswith("json"):
+                raw = raw[4:]
+            raw = raw.strip()
+
+        parsed = json.loads(raw)
+        if not isinstance(parsed, dict):
+            return None
+        return parsed
+    except (requests.RequestException, ValueError, KeyError, json.JSONDecodeError) as e:
+        tqdm.write(f"    Location lookup for \"{raw_location}\" errored ({e}), leaving it unresolved.")
+        return None
+
+
+def resolve_location(raw_location: str, cache: dict, api_key: str, session: requests.Session) -> None:
+    """Populate cache[raw_location.lower()] with {"location": ..., "note": ...}.
+    Keeps already-mappable text untouched; only reaches for the LLM+web-search
+    fallback when the raw text alone wouldn't get someone there, and never
+    invents specifics it isn't confident about."""
+    text = raw_location.strip()
+    key = text.lower()
+    if not text or key in cache:
+        return
+
+    if looks_directly_mappable(text, session):
+        time.sleep(NOMINATIM_DELAY_SECONDS)
+        cache[key] = {"location": text, "note": None}
+        return
+    time.sleep(NOMINATIM_DELAY_SECONDS)
+
+    resolution = resolve_via_groq_search(text, api_key) if api_key else None
+    time.sleep(LOCATION_LLM_DELAY_SECONDS)
+
+    resolved = (resolution or {}).get("resolved")
+    confidence = (resolution or {}).get("confidence")
+    if resolved and confidence in ("high", "medium"):
+        cache[key] = {
+            "location": f'{resolved.strip()} (listed as "{text}")',
+            "note": None,
+        }
+        return
+
+    # Couldn't confidently resolve it -- don't invent details. Keep the raw
+    # text (at least pointed at the right campus/city so it's *somewhat*
+    # mappable) and flag it so a human can fill in the gap.
+    cache[key] = {
+        "location": f"{text}, Adelaide University, Adelaide SA",
+        "note": f'Exact location for "{text}" could not be confirmed automatically -- check with the committee.',
+    }
+
+
+def resolve_event_locations(events: list, api_key: str) -> list:
+    """Resolve every unique raw location across the parsed events (cheap
+    geocoding first, web-search-enabled LLM fallback second), caching results
+    to disk so repeat hourly runs barely touch the network. Mutates and
+    returns `events` with resolved locations and any resolution caveats
+    folded into notes."""
+    cache = load_location_cache()
+    session = requests.Session()
+
+    unique_raw = sorted({
+        (ev.get("location") or "").strip()
+        for ev in events
+        if (ev.get("location") or "").strip()
+    })
+
+    if unique_raw:
+        print(f"Resolving {len(unique_raw)} unique location(s)...")
+        for raw in tqdm(unique_raw, desc="Resolving locations", unit="loc"):
+            resolve_location(raw, cache, api_key, session)
+
+    # Always (re)write the cache file once we get this far, even if there
+    # was nothing new to resolve -- keeps `git add docs/.location_cache.json`
+    # in the workflow from failing on a file that doesn't exist yet.
+    save_location_cache(cache)
+
+    for ev in events:
+        raw = (ev.get("location") or "").strip()
+        if not raw:
+            continue
+        cached = cache.get(raw.lower())
+        if not cached:
+            continue
+        ev["location"] = cached["location"]
+        if cached.get("note"):
+            ev["notes"] = f"{ev['notes']}\n\n{cached['note']}" if ev.get("notes") else cached["note"]
+
+    return events
+
+
+def _slot_richness(ev: dict) -> tuple:
+    """How much did we actually learn about this event? Used to pick a
+    winner when the same time slot shows up more than once in the source doc
+    (e.g. a quick overview list up top, then a fuller write-up further down)."""
+    title = (ev.get("title") or "").strip()
+    is_generic_title = title.lower() in ("", "rehearsal", "rehearsal.")
+    return (
+        0 if is_generic_title else 1,
+        1 if (ev.get("notes") or "").strip() else 0,
+        1 if (ev.get("location") or "").strip() else 0,
+        len(title),
+    )
+
+
+def dedupe_same_time_slots(events: list) -> list:
+    """Some rehearsal-schedule docs describe the same session twice -- once
+    in a terse overview line, again in a fuller per-rehearsal write-up.
+    Both extractions are individually "correct", they're just two views of
+    one session, so keep only the richer one per (date, start, end) slot
+    instead of double-booking it."""
+    best = {}
+    order = []
+    for ev in events:
+        try:
+            slot = (ev["date"], ev["start_time"], ev["end_time"])
+        except KeyError:
+            continue
+        if slot not in best:
+            order.append(slot)
+            best[slot] = ev
+        elif _slot_richness(ev) > _slot_richness(best[slot]):
+            best[slot] = ev
+    return [best[slot] for slot in order]
 
 
 def build_ics(events: list, tz_name: str, cal_name: str, doc_id: str) -> bytes:
@@ -322,7 +605,12 @@ def main():
     print("Change detected — parsing full Google Doc with Groq...")
     today = datetime.now(ZoneInfo(tz_name)).strftime("%Y-%m-%d")
     events = call_groq_full_doc(full_doc_text, api_key, today)
-    print(f"Parsed {len(events)} total unique event(s).")
+    print(f"Parsed {len(events)} raw event(s).")
+
+    events = dedupe_same_time_slots(events)
+    print(f"{len(events)} event(s) after merging same-timeslot duplicates.")
+
+    events = resolve_event_locations(events, api_key)
 
     ics_bytes = build_ics(events, tz_name, cal_name, doc_id)
     os.makedirs(os.path.dirname(ICS_FILE), exist_ok=True)
