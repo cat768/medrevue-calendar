@@ -53,7 +53,15 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/calendar.ics docs/.last_hash docs/.location_cache.json docs/index.html
+          # `git add` on a literal path fails outright (exit 128) if that
+          # path doesn't exist yet -- unlike a glob, it's not a silent
+          # no-op. docs/.location_cache.json in particular is only ever
+          # written when resolve_event_locations() actually runs, which
+          # sync_calendar.py skips on a "no doc changes" run, so it may not
+          # exist on disk yet. Only add files that are actually there.
+          for f in docs/calendar.ics docs/.last_hash docs/.location_cache.json docs/index.html; do
+            [ -f "$f" ] && git add "$f"
+          done
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
