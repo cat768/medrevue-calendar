@@ -33,8 +33,13 @@ GROQ_MODEL = "openai/gpt-oss-120b"
 
 # Chunking settings to strictly respect Groq's free tier rate limits
 CHUNK_MAX_CHARS = 3500
-CHUNK_DELAY_SECONDS = 20  # Spacing between chunk calls to stay under TPM/RPM
-MAX_RETRIES = 5           # Retries per chunk on 429 rate-limit responses
+CHUNK_DELAY_SECONDS = 20   # Spacing between chunk calls to stay under TPM/RPM
+MAX_RETRIES = 5            # Retries per chunk on 429 rate-limit responses
+MAX_COMPLETION_TOKENS = 4096  # Generous headroom: gpt-oss-120b spends part of this
+                               # budget on hidden reasoning tokens before it ever
+                               # writes the JSON, even at reasoning_effort "low".
+MAX_SPLIT_DEPTH = 2        # How many times a chunk may be halved if truncated
+MIN_SPLIT_CHARS = 600      # Don't try to split below this size
 
 SYSTEM_PROMPT = """You extract rehearsal schedule events from raw text copied from a \
 Google Doc. Output ONLY a JSON array, no prose, no markdown fences.
@@ -123,12 +128,16 @@ def _parse_retry_wait(resp: requests.Response, default: float = 15.0) -> float:
 
 
 def call_groq_single_chunk(
-    chunk_text: str, api_key: str, today: str, max_retries: int = MAX_RETRIES
+    chunk_text: str,
+    api_key: str,
+    today: str,
+    max_retries: int = MAX_RETRIES,
+    _depth: int = 0,
 ) -> list:
     payload = {
         "model": GROQ_MODEL,
         "temperature": 0,
-        "max_completion_tokens": 1024,
+        "max_completion_tokens": MAX_COMPLETION_TOKENS,
         "reasoning_effort": "low",
         "messages": [
             {"role": "system", "content": SYSTEM_PROMPT},
@@ -171,7 +180,37 @@ def call_groq_single_chunk(
             f"Exceeded {max_retries} retries due to persistent Groq rate limiting"
         )
 
-    raw = resp.json()["choices"][0]["message"]["content"].strip()
+    choice = resp.json()["choices"][0]
+    finish_reason = choice.get("finish_reason")
+    raw = choice["message"]["content"].strip()
+
+    # gpt-oss models burn part of max_completion_tokens on hidden reasoning
+    # before ever writing the JSON. If we got cut off mid-output, don't fail
+    # the whole run — split the fragment in half and let each half finish
+    # comfortably within budget.
+    if finish_reason == "length":
+        if _depth >= MAX_SPLIT_DEPTH or len(chunk_text) < MIN_SPLIT_CHARS:
+            raise RuntimeError(
+                "Groq output was truncated (finish_reason=length) and this "
+                "fragment is already too small to split further. Consider "
+                "raising MAX_COMPLETION_TOKENS."
+            )
+        print(
+            f"    Output truncated at depth {_depth}, splitting fragment "
+            f"({len(chunk_text)} chars) in half and retrying..."
+        )
+        lines = chunk_text.splitlines(keepends=True)
+        mid = max(1, len(lines) // 2)
+        first_half, second_half = "".join(lines[:mid]), "".join(lines[mid:])
+
+        events = call_groq_single_chunk(
+            first_half, api_key, today, max_retries, _depth + 1
+        )
+        time.sleep(CHUNK_DELAY_SECONDS)
+        events += call_groq_single_chunk(
+            second_half, api_key, today, max_retries, _depth + 1
+        )
+        return events
 
     if raw.startswith("```"):
         raw = raw.strip("`")
