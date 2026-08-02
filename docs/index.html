@@ -1,0 +1,504 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Rehearsal Schedule — MedRevue</title>
+<meta name="description" content="Subscribe to the MedRevue rehearsal calendar feed and see upcoming sessions.">
+<style>
+  :root {
+    --paper: #fdfcfa;
+    --paper-dim: #f4f0e6;
+    --ink: #17140f;
+    --ink-dim: #5b5648;
+    --rule: #ddd6c4;
+    --curtain: #8c1d2b;
+    --curtain-dark: #6b1520;
+    --gold: #a9822f;
+    --radius: 10px;
+    --max-w: 720px;
+    --font-display: Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { color-scheme: light; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  main {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 48px 20px 64px;
+  }
+  header.page-head {
+    margin-bottom: 32px;
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--curtain);
+    text-transform: uppercase;
+    margin: 0 0 10px;
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 6vw, 40px);
+    line-height: 1.1;
+    margin: 0 0 10px;
+    letter-spacing: -0.01em;
+  }
+  .subhead {
+    color: var(--ink-dim);
+    font-size: 16px;
+    margin: 0;
+    max-width: 52ch;
+  }
+
+  /* --- next up ticket stub --- */
+  .next-up { margin: 32px 0; }
+  .stub {
+    position: relative;
+    background: var(--curtain);
+    color: var(--paper);
+    border-radius: var(--radius);
+    padding: 22px 22px 30px;
+    transform: rotate(-0.6deg);
+    animation: settle 0.5s ease-out;
+  }
+  .stub::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 14px;
+    background-image: radial-gradient(circle, var(--paper) 3px, transparent 3.4px);
+    background-size: 16px 16px;
+    background-position: 8px 3px;
+    background-repeat: repeat-x;
+  }
+  .stub-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: var(--paper);
+    color: var(--curtain-dark);
+    padding: 3px 9px;
+    border-radius: 3px;
+    transform: rotate(-2deg);
+  }
+  .stub-when {
+    margin-top: 14px;
+    font-family: var(--font-mono);
+    font-weight: 700;
+  }
+  .stub-day { font-size: 14px; letter-spacing: 0.1em; opacity: 0.85; margin-right: 8px; }
+  .stub-date { font-size: 20px; letter-spacing: 0.04em; }
+  .stub-time {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    opacity: 0.9;
+    margin-top: 4px;
+  }
+  .stub-title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    margin: 10px 0 2px;
+  }
+  .stub-location { font-size: 14px; opacity: 0.88; }
+
+  @keyframes settle {
+    from { opacity: 0; transform: translateY(8px) rotate(-0.6deg); }
+    to   { opacity: 1; transform: translateY(0) rotate(-0.6deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stub { animation: none; }
+  }
+
+  /* --- subscribe --- */
+  section.subscribe { margin: 36px 0; }
+  h2 {
+    font-family: var(--font-display);
+    font-size: 20px;
+    margin: 0 0 12px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 15px 20px;
+    background: var(--curtain);
+    color: var(--paper);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .btn:hover { background: var(--curtain-dark); }
+  .btn:focus-visible, a:focus-visible, input:focus-visible, button:focus-visible {
+    outline: 2px solid var(--curtain);
+    outline-offset: 2px;
+  }
+  .alt-line {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--ink-dim);
+  }
+  .alt-line a { color: var(--ink-dim); }
+  .alt-links {
+    display: flex;
+    gap: 14px;
+    margin-top: 6px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+  .alt-links a { color: var(--curtain-dark); text-decoration: none; border-bottom: 1px solid var(--rule); }
+  .alt-links a:hover { border-color: var(--curtain-dark); }
+
+  /* --- schedule --- */
+  section.schedule-section { margin: 40px 0; }
+  .schedule { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+  .row {
+    display: grid;
+    grid-template-columns: 52px 64px 1fr;
+    gap: 14px;
+    align-items: start;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .row-date {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-mono);
+    line-height: 1.2;
+  }
+  .row-day { font-size: 11px; color: var(--ink-dim); letter-spacing: 0.06em; }
+  .row-daynum { font-size: 20px; font-weight: 700; }
+  .row-month { font-size: 11px; color: var(--ink-dim); letter-spacing: 0.06em; }
+  .row-time {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--ink-dim);
+    line-height: 1.4;
+  }
+  .row-title { font-weight: 600; font-size: 15px; }
+  .row-location {
+    display: inline-block;
+    font-size: 13px;
+    color: var(--curtain-dark);
+    margin-top: 2px;
+  }
+  .row-notes {
+    display: block;
+    font-size: 13px;
+    color: var(--ink-dim);
+    font-style: italic;
+    margin-top: 2px;
+  }
+  .empty-state { color: var(--ink-dim); font-size: 15px; }
+
+  /* --- feed url --- */
+  section.feed-section { margin: 40px 0 8px; }
+  .url-box {
+    display: flex;
+    gap: 8px;
+    background: var(--paper-dim);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 6px 6px 6px 14px;
+    align-items: center;
+  }
+  .url-box input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink);
+    padding: 8px 0;
+  }
+  .url-box button {
+    flex-shrink: 0;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--paper);
+    background: var(--ink);
+    border: none;
+    border-radius: 6px;
+    padding: 9px 14px;
+    cursor: pointer;
+  }
+  .url-box button:hover { background: var(--curtain-dark); }
+  .feed-actions {
+    margin-top: 10px;
+    font-size: 13px;
+  }
+  .feed-actions a { color: var(--curtain-dark); }
+  .helper-text {
+    color: var(--ink-dim);
+    font-size: 13px;
+    margin: 8px 0 0;
+  }
+
+  footer {
+    margin-top: 48px;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+    font-size: 12.5px;
+    color: var(--ink-dim);
+  }
+  footer a { color: var(--ink-dim); }
+
+  @media (max-width: 420px) {
+    .row { grid-template-columns: 46px 58px 1fr; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="page-head">
+    <p class="eyebrow">MedRevue</p>
+    <h1>Rehearsal Schedule</h1>
+    <p class="subhead">Auto-synced from the cast schedule doc. Subscribe once and every rehearsal shows up on its own — no more scrolling the group chat for a call time.</p>
+  </header>
+
+  
+    <section class="next-up" aria-label="Next session">
+      <div class="stub">
+        <span class="stub-tag">Next up</span>
+        <div class="stub-when">
+          <span class="stub-day">WED</span>
+          <span class="stub-date">5 AUG</span>
+        </div>
+        <div class="stub-time">5:30 pm – 8:15 pm</div>
+        <h2 class="stub-title">Rehearsal #2</h2>
+        <div class="stub-location">AHMS 4050a/b</div>
+      </div>
+    </section>
+
+  <section class="subscribe">
+    <h2>Subscribe</h2>
+    <a id="subscribe-btn" class="btn" href="https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.medrevue.animeisamistake.com%2Fcalendar.ics">Add to Calendar</a>
+    <p class="alt-line">Picked for <span id="platform-name">your device</span> automatically — wrong guess?</p>
+    <p class="alt-links">
+      <a href="webcal://calendar.medrevue.animeisamistake.com/calendar.ics">Apple Calendar</a>
+      <a href="https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.medrevue.animeisamistake.com%2Fcalendar.ics">Google Calendar</a>
+      <a href="https://outlook.live.com/calendar/0/addfromweb?url=https%3A%2F%2Fcalendar.medrevue.animeisamistake.com%2Fcalendar.ics&amp;name=Rehearsal%20Schedule">Outlook</a>
+    </p>
+    <noscript><p class="helper-text">JavaScript is off, so pick the right app above manually, or copy the feed URL below into any calendar app's "subscribe by URL" option.</p></noscript>
+  </section>
+
+  <section class="schedule-section">
+    <h2>Upcoming sessions</h2>
+    <ul class="schedule">
+        <li class="row">
+          <div class="row-date">
+            <span class="row-day">WED</span>
+            <span class="row-daynum">5</span>
+            <span class="row-month">AUG</span>
+          </div>
+          <div class="row-time">5:30 pm<br>– 8:15 pm</div>
+          <div class="row-details">
+            <div class="row-title">Rehearsal #2</div>
+            <div><span class="row-location">AHMS 4050a/b</span></div>
+          </div>
+        </li>
+        <li class="row">
+          <div class="row-date">
+            <span class="row-day">SUN</span>
+            <span class="row-daynum">9</span>
+            <span class="row-month">AUG</span>
+          </div>
+          <div class="row-time">12:00 pm<br>– 4:30 pm</div>
+          <div class="row-details">
+            <div class="row-title">Rehearsal #3</div>
+            <div><span class="row-location">Scott Theatre Main Campus</span></div>
+          </div>
+        </li>
+        <li class="row">
+          <div class="row-date">
+            <span class="row-day">WED</span>
+            <span class="row-daynum">12</span>
+            <span class="row-month">AUG</span>
+          </div>
+          <div class="row-time">5:30 pm<br>– 8:00 pm</div>
+          <div class="row-details">
+            <div class="row-title">Rehearsal</div>
+            <div><span class="row-location">AHMS 4050a/b</span></div>
+          </div>
+        </li>
+        <li class="row">
+          <div class="row-date">
+            <span class="row-day">WED</span>
+            <span class="row-daynum">12</span>
+            <span class="row-month">AUG</span>
+          </div>
+          <div class="row-time">5:30 pm<br>– 8:00 pm</div>
+          <div class="row-details">
+            <div class="row-title">Rehearsal #4</div>
+            <div><span class="row-location">AHMS 4050a/b</span></div>
+          </div>
+        </li>
+        <li class="row">
+          <div class="row-date">
+            <span class="row-day">SUN</span>
+            <span class="row-daynum">16</span>
+            <span class="row-month">AUG</span>
+          </div>
+          <div class="row-time">12:00 pm<br>– 4:30 pm</div>
+          <div class="row-details">
+            <div class="row-title">Rehearsal</div>
+            <div><span class="row-location">Scott Theatre Main Campus</span></div>
+          </div>
+        </li>
+        <li class="row">
+          <div class="row-date">
+            <span class="row-day">SUN</span>
+            <span class="row-daynum">16</span>
+            <span class="row-month">AUG</span>
+          </div>
+          <div class="row-time">12:00 pm<br>– 4:30 pm</div>
+          <div class="row-details">
+            <div class="row-title">Rehearsal #5</div>
+            <div><span class="row-location">Scott Theatre/Lady Symon Exercise Studio</span></div>
+          </div>
+        </li>
+        <li class="row">
+          <div class="row-date">
+            <span class="row-day">WED</span>
+            <span class="row-daynum">19</span>
+            <span class="row-month">AUG</span>
+          </div>
+          <div class="row-time">5:30 pm<br>– 8:00 pm</div>
+          <div class="row-details">
+            <div class="row-title">Rehearsal</div>
+            <div><span class="row-location">AHMS 4050a/b</span></div>
+          </div>
+        </li>
+        <li class="row">
+          <div class="row-date">
+            <span class="row-day">WED</span>
+            <span class="row-daynum">19</span>
+            <span class="row-month">AUG</span>
+          </div>
+          <div class="row-time">5:30 pm<br>– 8:00 pm</div>
+          <div class="row-details">
+            <div class="row-title">Rehearsal #6</div>
+            <div><span class="row-location">AHMS 4050a/b</span></div>
+          </div>
+        </li></ul>
+  </section>
+
+  <section class="feed-section">
+    <h2>Feed URL</h2>
+    <div class="url-box">
+      <input id="feed-url" type="text" readonly value="https://calendar.medrevue.animeisamistake.com/calendar.ics" aria-label="Calendar feed URL">
+      <button id="copy-btn" type="button">Copy</button>
+    </div>
+    <p class="helper-text">Paste this into any calendar app's "subscribe from URL" option. Updates hourly, straight from the feed — no need to re-download it.</p>
+    <p class="feed-actions"><a id="copy-link" href="#">Copy link</a> · <a href="calendar.ics" download>Download .ics file</a></p>
+  </section>
+
+  <footer>
+    Synced automatically from the cast schedule doc, published on GitHub Pages. ·
+    <a href="https://github.com/cat768/medrevue-calendar">medrevue-calendar on GitHub</a>
+  </footer>
+</main>
+
+<script>
+(function () {
+  var FEED_URL = "https://calendar.medrevue.animeisamistake.com/calendar.ics";
+  var WEBCAL_URL = "webcal://calendar.medrevue.animeisamistake.com/calendar.ics";
+  var GCAL_URL = "https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.medrevue.animeisamistake.com%2Fcalendar.ics";
+  var OUTLOOK_URL = "https://outlook.live.com/calendar/0/addfromweb?url=https%3A%2F%2Fcalendar.medrevue.animeisamistake.com%2Fcalendar.ics&amp;name=Rehearsal%20Schedule";
+
+  function detectPlatform() {
+    var ua = navigator.userAgent || "";
+    var platform = navigator.platform || "";
+    var isIOS = /iPad|iPhone|iPod/.test(ua) ||
+      (platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    var isMac = /Mac/.test(platform) && !isIOS;
+    var isAndroid = /Android/.test(ua);
+    var isWindows = /Win/.test(platform);
+    if (isIOS || isMac) return "apple";
+    if (isAndroid) return "android";
+    if (isWindows) return "windows";
+    return "other";
+  }
+
+  var CONFIG = {
+    apple:   { label: "Add to Apple Calendar",  href: WEBCAL_URL,  name: "Apple" },
+    android: { label: "Add to Google Calendar", href: GCAL_URL,    name: "Android" },
+    windows: { label: "Add to Outlook",         href: OUTLOOK_URL, name: "Windows" },
+    other:   { label: "Add to Google Calendar", href: GCAL_URL,    name: "your device" }
+  };
+
+  var choice = CONFIG[detectPlatform()];
+  var btn = document.getElementById("subscribe-btn");
+  var nameEl = document.getElementById("platform-name");
+  if (btn) {
+    btn.textContent = choice.label;
+    btn.setAttribute("href", choice.href);
+  }
+  if (nameEl) nameEl.textContent = choice.name;
+
+  var copyBtn = document.getElementById("copy-btn");
+  var copyLink = document.getElementById("copy-link");
+  var urlInput = document.getElementById("feed-url");
+
+  function resetCopyLabel() {
+    setTimeout(function () { if (copyBtn) copyBtn.textContent = "Copy"; }, 1800);
+  }
+
+  function fallbackCopy() {
+    if (!urlInput) return;
+    urlInput.removeAttribute("readonly");
+    urlInput.focus();
+    urlInput.select();
+    urlInput.setSelectionRange(0, FEED_URL.length);
+    try {
+      document.execCommand("copy");
+      if (copyBtn) copyBtn.textContent = "Copied";
+    } catch (e) {
+      if (copyBtn) copyBtn.textContent = "Select & Ctrl/Cmd+C";
+    }
+    urlInput.setAttribute("readonly", "readonly");
+    resetCopyLabel();
+  }
+
+  function doCopy() {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(FEED_URL).then(function () {
+        if (copyBtn) copyBtn.textContent = "Copied";
+        resetCopyLabel();
+      }, fallbackCopy);
+    } else {
+      fallbackCopy();
+    }
+  }
+
+  if (copyBtn) copyBtn.addEventListener("click", doCopy);
+  if (copyLink) copyLink.addEventListener("click", function (e) { e.preventDefault(); doCopy(); });
+  if (urlInput) urlInput.addEventListener("click", function () { urlInput.select(); });
+})();
+</script>
+</body>
+</html>
