@@ -16,6 +16,7 @@ Optional env vars:
 import hashlib
 import json
 import os
+import re
 import sys
 import time
 import uuid
@@ -32,7 +33,8 @@ GROQ_MODEL = "openai/gpt-oss-120b"
 
 # Chunking settings to strictly respect Groq's free tier rate limits
 CHUNK_MAX_CHARS = 3500
-CHUNK_DELAY_SECONDS = 12  # Spacing between chunk calls to stay under TPM/RPM
+CHUNK_DELAY_SECONDS = 20  # Spacing between chunk calls to stay under TPM/RPM
+MAX_RETRIES = 5           # Retries per chunk on 429 rate-limit responses
 
 SYSTEM_PROMPT = """You extract rehearsal schedule events from raw text copied from a \
 Google Doc. Output ONLY a JSON array, no prose, no markdown fences.
@@ -108,11 +110,25 @@ def chunk_text(text: str, max_chars: int = CHUNK_MAX_CHARS) -> list[str]:
     return chunks
 
 
-def call_groq_single_chunk(chunk_text: str, api_key: str, today: str) -> list:
+def _parse_retry_wait(resp: requests.Response, default: float = 15.0) -> float:
+    """Pull the 'try again in Xs' hint out of a Groq 429 body, else fall back."""
+    try:
+        msg = resp.json()["error"]["message"]
+        m = re.search(r"try again in ([\d.]+)s", msg)
+        if m:
+            return float(m.group(1))
+    except Exception:
+        pass
+    return default
+
+
+def call_groq_single_chunk(
+    chunk_text: str, api_key: str, today: str, max_retries: int = MAX_RETRIES
+) -> list:
     payload = {
         "model": GROQ_MODEL,
         "temperature": 0,
-        "max_completion_tokens": 2048,
+        "max_completion_tokens": 1024,
         "reasoning_effort": "low",
         "messages": [
             {"role": "system", "content": SYSTEM_PROMPT},
@@ -122,19 +138,39 @@ def call_groq_single_chunk(chunk_text: str, api_key: str, today: str) -> list:
             },
         ],
     }
-    resp = requests.post(
-        GROQ_URL,
-        headers={
-            "Authorization": f"Bearer {api_key}",
-            "Content-Type": "application/json",
-        },
-        json=payload,
-        timeout=60,
-    )
-    if not resp.ok:
-        raise RuntimeError(
-            f"Groq API error {resp.status_code}: {resp.text[:1000]}"
+
+    resp = None
+    for attempt in range(1, max_retries + 1):
+        resp = requests.post(
+            GROQ_URL,
+            headers={
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json",
+            },
+            json=payload,
+            timeout=60,
         )
+
+        if resp.status_code == 429:
+            wait = _parse_retry_wait(resp) + 2  # small buffer on top of Groq's estimate
+            print(
+                f"    Rate limited (attempt {attempt}/{max_retries}), "
+                f"waiting {wait:.1f}s before retry..."
+            )
+            time.sleep(wait)
+            continue
+
+        if not resp.ok:
+            raise RuntimeError(
+                f"Groq API error {resp.status_code}: {resp.text[:1000]}"
+            )
+
+        break
+    else:
+        raise RuntimeError(
+            f"Exceeded {max_retries} retries due to persistent Groq rate limiting"
+        )
+
     raw = resp.json()["choices"][0]["message"]["content"].strip()
 
     if raw.startswith("```"):
@@ -175,7 +211,7 @@ def call_groq_full_doc(full_text: str, api_key: str, today: str) -> list:
 def build_ics(events: list, tz_name: str, cal_name: str, doc_id: str) -> bytes:
     tz = ZoneInfo(tz_name)
     cal = Calendar()
-    cal.add("prodid", "-//Rehearsal Schedule Sync//[animeisamistake.com//](https://animeisamistake.com//)")
+    cal.add("prodid", "-//Rehearsal Schedule Sync//animeisamistake.com//")
     cal.add("version", "2.0")
     cal.add("x-wr-calname", cal_name)
     cal.add("x-wr-timezone", tz_name)
