@@ -91,3 +91,15 @@ To change the cutoff later, edit the `CUTOFF_DATE` line in
 - **Free tier limits**: Groq's free tier is rate-limited but has no spend
   cap; for one document parsed at most once an hour this is nowhere near the
   limits. Worth a glance at console.groq.com if you ever see failures.
+- **Location resolution**: ambiguous venue names (nicknames, room codes) get
+  looked up automatically — a free OpenStreetMap geocode check first, then a
+  web-search-enabled Groq call against Adelaide University's site if that
+  doesn't resolve it. No extra setup or secrets needed, it reuses
+  `GROQ_API_KEY`. Results are cached in `docs/.location_cache.json`; if a
+  location's `LOCATION` field in the calendar ever looks wrong, that file is
+  the place to check (or just delete the relevant entry to force a re-lookup
+  next run). Locations it couldn't confidently resolve are left as the raw
+  text with a note in the event description rather than a guessed address.
+- **Progress bars**: the Actions log now shows `tqdm` progress bars for both
+  the per-chunk Groq parsing and the location-resolution step, so you can
+  tell at a glance how far a run has gotten.

@@ -34,6 +34,26 @@ GitHub Pages → `calendar.medrevue.animeisamistake.com`
 - **Stable UIDs.** Event UIDs are deterministic hashes of doc ID + date +
   time + title, so re-syncing updates existing events instead of
   duplicating them.
+- **Same-timeslot dedup, before UIDs are computed.** The source doc tends to
+  describe each rehearsal twice — a terse overview line, then a fuller
+  per-rehearsal write-up further down. `dedupe_same_time_slots()` collapses
+  those into one event (keeping whichever has a more specific title/notes/
+  location) *before* the existing UID logic runs, so this only touches
+  slots that actually had a duplicate — it doesn't churn UIDs for the
+  majority of events that were only ever described once.
+- **Location resolution is separate from schedule extraction, and cached.**
+  The main Groq call extracts `location` verbatim (don't make it guess
+  addresses — that produces worse, less-auditable results). A separate
+  `resolve_event_locations()` pass turns that raw text into something
+  mappable: a free Nominatim (OpenStreetMap) geocode check first, then a
+  web-search-enabled Groq "compound-mini" call (same `GROQ_API_KEY`, no new
+  secret) only for names that don't already resolve on their own. Results
+  are cached in `docs/.location_cache.json` (committed by the workflow, same
+  pattern as `.last_hash`) so this barely touches the network on repeat
+  hourly runs. Low-confidence resolutions are deliberately left as the raw
+  text plus a note asking a human to confirm — don't change this to always
+  return *something* confident, that's how you get a wrong room number that
+  nobody double-checks.
 - **Hard cutoff date.** The sync intentionally goes inert after
   `CUTOFF_DATE` (currently 2026-12-31, set as an env var in
   `.github/workflows/update-calendar.yml`) so it doesn't run indefinitely

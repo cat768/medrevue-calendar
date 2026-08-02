@@ -40,7 +40,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add docs/calendar.ics docs/.last_hash
+          git add docs/calendar.ics docs/.last_hash docs/.location_cache.json
           if git diff --cached --quiet; then
             echo "No changes to commit."
           else
