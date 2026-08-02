@@ -1,0 +1,608 @@
+#!/usr/bin/env python3
+"""
+Render docs/index.html: a self-contained landing page for the rehearsal
+calendar feed. Reads the already-built docs/calendar.ics (source of truth --
+this script never talks to the Google Doc or Groq, it just re-renders
+whatever sync_calendar.py last wrote) and produces:
+
+  - a "next up" card for the soonest session
+  - a list of upcoming sessions (default: next 8)
+  - a subscribe button that adapts to the visitor's device (Apple Calendar /
+    Google Calendar / Outlook), detected client-side in the browser
+  - a read-only feed URL box with a copy button, plus a manual download link
+
+Runs every workflow execution (not just when the doc changes) because "which
+events are upcoming" depends on the current time, not just on the doc
+content.
+
+Optional env vars (mirror sync_calendar.py where they overlap):
+  FEED_URL        - absolute HTTPS URL of the .ics feed, default the
+                    production medrevue URL
+  TIMEZONE        - IANA tz name, default "Australia/Adelaide"
+  CALENDAR_NAME   - fallback display name if the ICS has no X-WR-CALNAME,
+                    default "Rehearsal Schedule"
+  UPCOMING_LIMIT  - how many sessions to list, default 8
+  GITHUB_URL      - repo link for the footer, default cat768/medrevue-calendar
+"""
+
+import html
+import os
+from datetime import datetime
+from zoneinfo import ZoneInfo
+
+from icalendar import Calendar
+
+ICS_FILE = "docs/calendar.ics"
+OUTPUT_FILE = "docs/index.html"
+
+FEED_URL = os.environ.get(
+    "FEED_URL", "https://calendar.medrevue.animeisamistake.com/calendar.ics"
+)
+TZ_NAME = os.environ.get("TIMEZONE", "Australia/Adelaide")
+DEFAULT_CAL_NAME = os.environ.get("CALENDAR_NAME", "Rehearsal Schedule")
+UPCOMING_LIMIT = int(os.environ.get("UPCOMING_LIMIT", "8"))
+GITHUB_URL = os.environ.get("GITHUB_URL", "https://github.com/cat768/medrevue-calendar")
+
+
+# ---------------------------------------------------------------- parsing --
+
+def load_upcoming_events(ics_path: str, tz_name: str) -> tuple[list[dict], str | None]:
+    """Returns (events, calendar_name). events is sorted ascending, kept if
+    the session hasn't finished yet. calendar_name is None if the file is
+    missing (first-run / not synced yet)."""
+    if not os.path.exists(ics_path):
+        return [], None
+
+    with open(ics_path, "rb") as f:
+        cal = Calendar.from_ical(f.read())
+
+    cal_name = str(cal.get("x-wr-calname") or "") or None
+    tz = ZoneInfo(tz_name)
+    now = datetime.now(tz)
+
+    events = []
+    for comp in cal.walk("VEVENT"):
+        dtstart_prop = comp.get("dtstart")
+        if dtstart_prop is None:
+            continue
+        start = dtstart_prop.dt
+        if not isinstance(start, datetime):
+            continue  # skip bare-date all-day entries, this feed doesn't use them
+        if start.tzinfo is None:
+            start = start.replace(tzinfo=tz)
+        else:
+            start = start.astimezone(tz)
+
+        dtend_prop = comp.get("dtend")
+        end = start
+        if dtend_prop is not None:
+            end_dt = dtend_prop.dt
+            if isinstance(end_dt, datetime):
+                end = end_dt.replace(tzinfo=tz) if end_dt.tzinfo is None else end_dt.astimezone(tz)
+
+        if end < now:
+            continue  # already finished
+
+        events.append({
+            "start": start,
+            "end": end,
+            "title": str(comp.get("summary") or "Rehearsal").strip(),
+            "location": str(comp.get("location") or "").strip(),
+            "notes": str(comp.get("description") or "").strip(),
+        })
+
+    events.sort(key=lambda e: e["start"])
+    return events, cal_name
+
+
+# --------------------------------------------------------------- rendering --
+
+def fmt_time(dt: datetime) -> str:
+    s = dt.strftime("%I:%M %p")
+    if s.startswith("0"):
+        s = s[1:]
+    return s.lower()
+
+
+def truncate(text: str, limit: int = 160) -> str:
+    text = " ".join(text.split())  # collapse embedded newlines/whitespace
+    if len(text) <= limit:
+        return text
+    return text[: limit - 1].rstrip() + "\u2026"
+
+
+def render_next_up(event: dict | None) -> str:
+    if event is None:
+        return ""
+    start = event["start"]
+    location_html = (
+        f'<div class="stub-location">{html.escape(event["location"])}</div>'
+        if event["location"] else ""
+    )
+    return f"""
+    <section class="next-up" aria-label="Next session">
+      <div class="stub">
+        <span class="stub-tag">Next up</span>
+        <div class="stub-when">
+          <span class="stub-day">{html.escape(start.strftime("%a").upper())}</span>
+          <span class="stub-date">{html.escape(start.strftime("%-d %b").upper())}</span>
+        </div>
+        <div class="stub-time">{html.escape(fmt_time(event["start"]))} \u2013 {html.escape(fmt_time(event["end"]))}</div>
+        <h2 class="stub-title">{html.escape(event["title"])}</h2>
+        {location_html}
+      </div>
+    </section>"""
+
+
+def render_schedule_rows(events: list[dict]) -> str:
+    if not events:
+        return """
+        <p class="empty-state">No sessions on the schedule right now. The feed
+        is still live \u2014 check back after the next sync, or flag it to the
+        committee if the doc hasn't moved in a while.</p>"""
+
+    rows = []
+    for ev in events:
+        start = ev["start"]
+        meta_bits = []
+        if ev["location"]:
+            meta_bits.append(f'<span class="row-location">{html.escape(ev["location"])}</span>')
+        if ev["notes"]:
+            meta_bits.append(f'<span class="row-notes">{html.escape(truncate(ev["notes"]))}</span>')
+        meta_html = "".join(f"<div>{b}</div>" for b in meta_bits)
+
+        rows.append(f"""
+        <li class="row">
+          <div class="row-date">
+            <span class="row-day">{html.escape(start.strftime("%a").upper())}</span>
+            <span class="row-daynum">{html.escape(start.strftime("%-d"))}</span>
+            <span class="row-month">{html.escape(start.strftime("%b").upper())}</span>
+          </div>
+          <div class="row-time">{html.escape(fmt_time(ev["start"]))}<br>\u2013 {html.escape(fmt_time(ev["end"]))}</div>
+          <div class="row-details">
+            <div class="row-title">{html.escape(ev["title"])}</div>
+            {meta_html}
+          </div>
+        </li>""")
+
+    return f'<ul class="schedule">{"".join(rows)}</ul>'
+
+
+PAGE_TEMPLATE = """<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__CAL_NAME__ \u2014 MedRevue</title>
+<meta name="description" content="Subscribe to the MedRevue rehearsal calendar feed and see upcoming sessions.">
+<style>
+  :root {
+    --paper: #fdfcfa;
+    --paper-dim: #f4f0e6;
+    --ink: #17140f;
+    --ink-dim: #5b5648;
+    --rule: #ddd6c4;
+    --curtain: #8c1d2b;
+    --curtain-dark: #6b1520;
+    --gold: #a9822f;
+    --radius: 10px;
+    --max-w: 720px;
+    --font-display: Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
+    --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  * { box-sizing: border-box; }
+  html { color-scheme: light; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  main {
+    max-width: var(--max-w);
+    margin: 0 auto;
+    padding: 48px 20px 64px;
+  }
+  header.page-head {
+    margin-bottom: 32px;
+  }
+  .eyebrow {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    color: var(--curtain);
+    text-transform: uppercase;
+    margin: 0 0 10px;
+  }
+  h1 {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: clamp(28px, 6vw, 40px);
+    line-height: 1.1;
+    margin: 0 0 10px;
+    letter-spacing: -0.01em;
+  }
+  .subhead {
+    color: var(--ink-dim);
+    font-size: 16px;
+    margin: 0;
+    max-width: 52ch;
+  }
+
+  /* --- next up ticket stub --- */
+  .next-up { margin: 32px 0; }
+  .stub {
+    position: relative;
+    background: var(--curtain);
+    color: var(--paper);
+    border-radius: var(--radius);
+    padding: 22px 22px 30px;
+    transform: rotate(-0.6deg);
+    animation: settle 0.5s ease-out;
+  }
+  .stub::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 14px;
+    background-image: radial-gradient(circle, var(--paper) 3px, transparent 3.4px);
+    background-size: 16px 16px;
+    background-position: 8px 3px;
+    background-repeat: repeat-x;
+  }
+  .stub-tag {
+    display: inline-block;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    background: var(--paper);
+    color: var(--curtain-dark);
+    padding: 3px 9px;
+    border-radius: 3px;
+    transform: rotate(-2deg);
+  }
+  .stub-when {
+    margin-top: 14px;
+    font-family: var(--font-mono);
+    font-weight: 700;
+  }
+  .stub-day { font-size: 14px; letter-spacing: 0.1em; opacity: 0.85; margin-right: 8px; }
+  .stub-date { font-size: 20px; letter-spacing: 0.04em; }
+  .stub-time {
+    font-family: var(--font-mono);
+    font-size: 15px;
+    opacity: 0.9;
+    margin-top: 4px;
+  }
+  .stub-title {
+    font-family: var(--font-display);
+    font-size: 22px;
+    margin: 10px 0 2px;
+  }
+  .stub-location { font-size: 14px; opacity: 0.88; }
+
+  @keyframes settle {
+    from { opacity: 0; transform: translateY(8px) rotate(-0.6deg); }
+    to   { opacity: 1; transform: translateY(0) rotate(-0.6deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .stub { animation: none; }
+  }
+
+  /* --- subscribe --- */
+  section.subscribe { margin: 36px 0; }
+  h2 {
+    font-family: var(--font-display);
+    font-size: 20px;
+    margin: 0 0 12px;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    padding: 15px 20px;
+    background: var(--curtain);
+    color: var(--paper);
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: background 0.15s ease;
+  }
+  .btn:hover { background: var(--curtain-dark); }
+  .btn:focus-visible, a:focus-visible, input:focus-visible, button:focus-visible {
+    outline: 2px solid var(--curtain);
+    outline-offset: 2px;
+  }
+  .alt-line {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--ink-dim);
+  }
+  .alt-line a { color: var(--ink-dim); }
+  .alt-links {
+    display: flex;
+    gap: 14px;
+    margin-top: 6px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+  .alt-links a { color: var(--curtain-dark); text-decoration: none; border-bottom: 1px solid var(--rule); }
+  .alt-links a:hover { border-color: var(--curtain-dark); }
+
+  /* --- schedule --- */
+  section.schedule-section { margin: 40px 0; }
+  .schedule { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
+  .row {
+    display: grid;
+    grid-template-columns: 52px 64px 1fr;
+    gap: 14px;
+    align-items: start;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+  .row-date {
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-mono);
+    line-height: 1.2;
+  }
+  .row-day { font-size: 11px; color: var(--ink-dim); letter-spacing: 0.06em; }
+  .row-daynum { font-size: 20px; font-weight: 700; }
+  .row-month { font-size: 11px; color: var(--ink-dim); letter-spacing: 0.06em; }
+  .row-time {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    color: var(--ink-dim);
+    line-height: 1.4;
+  }
+  .row-title { font-weight: 600; font-size: 15px; }
+  .row-location {
+    display: inline-block;
+    font-size: 13px;
+    color: var(--curtain-dark);
+    margin-top: 2px;
+  }
+  .row-notes {
+    display: block;
+    font-size: 13px;
+    color: var(--ink-dim);
+    font-style: italic;
+    margin-top: 2px;
+  }
+  .empty-state { color: var(--ink-dim); font-size: 15px; }
+
+  /* --- feed url --- */
+  section.feed-section { margin: 40px 0 8px; }
+  .url-box {
+    display: flex;
+    gap: 8px;
+    background: var(--paper-dim);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 6px 6px 6px 14px;
+    align-items: center;
+  }
+  .url-box input {
+    flex: 1;
+    min-width: 0;
+    border: none;
+    background: transparent;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--ink);
+    padding: 8px 0;
+  }
+  .url-box button {
+    flex-shrink: 0;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--paper);
+    background: var(--ink);
+    border: none;
+    border-radius: 6px;
+    padding: 9px 14px;
+    cursor: pointer;
+  }
+  .url-box button:hover { background: var(--curtain-dark); }
+  .feed-actions {
+    margin-top: 10px;
+    font-size: 13px;
+  }
+  .feed-actions a { color: var(--curtain-dark); }
+  .helper-text {
+    color: var(--ink-dim);
+    font-size: 13px;
+    margin: 8px 0 0;
+  }
+
+  footer {
+    margin-top: 48px;
+    padding-top: 18px;
+    border-top: 1px solid var(--rule);
+    font-size: 12.5px;
+    color: var(--ink-dim);
+  }
+  footer a { color: var(--ink-dim); }
+
+  @media (max-width: 420px) {
+    .row { grid-template-columns: 46px 58px 1fr; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <header class="page-head">
+    <p class="eyebrow">MedRevue</p>
+    <h1>__CAL_NAME__</h1>
+    <p class="subhead">Auto-synced from the cast schedule doc. Subscribe once and every rehearsal shows up on its own \u2014 no more scrolling the group chat for a call time.</p>
+  </header>
+
+  __NEXT_UP_BLOCK__
+
+  <section class="subscribe">
+    <h2>Subscribe</h2>
+    <a id="subscribe-btn" class="btn" href="__GCAL_URL__">Add to Calendar</a>
+    <p class="alt-line">Picked for <span id="platform-name">your device</span> automatically \u2014 wrong guess?</p>
+    <p class="alt-links">
+      <a href="__WEBCAL_URL__">Apple Calendar</a>
+      <a href="__GCAL_URL__">Google Calendar</a>
+      <a href="__OUTLOOK_URL__">Outlook</a>
+    </p>
+    <noscript><p class="helper-text">JavaScript is off, so pick the right app above manually, or copy the feed URL below into any calendar app's "subscribe by URL" option.</p></noscript>
+  </section>
+
+  <section class="schedule-section">
+    <h2>Upcoming sessions</h2>
+    __SCHEDULE_ROWS__
+  </section>
+
+  <section class="feed-section">
+    <h2>Feed URL</h2>
+    <div class="url-box">
+      <input id="feed-url" type="text" readonly value="__FEED_URL__" aria-label="Calendar feed URL">
+      <button id="copy-btn" type="button">Copy</button>
+    </div>
+    <p class="helper-text">Paste this into any calendar app's "subscribe from URL" option. Updates hourly, straight from the feed \u2014 no need to re-download it.</p>
+    <p class="feed-actions"><a id="copy-link" href="#">Copy link</a> \u00b7 <a href="calendar.ics" download>Download .ics file</a></p>
+  </section>
+
+  <footer>
+    Synced automatically from the cast schedule doc, published on GitHub Pages. \u00b7
+    <a href="__GITHUB_URL__">medrevue-calendar on GitHub</a>
+  </footer>
+</main>
+
+<script>
+(function () {
+  var FEED_URL = "__FEED_URL__";
+  var WEBCAL_URL = "__WEBCAL_URL__";
+  var GCAL_URL = "__GCAL_URL__";
+  var OUTLOOK_URL = "__OUTLOOK_URL__";
+
+  function detectPlatform() {
+    var ua = navigator.userAgent || "";
+    var platform = navigator.platform || "";
+    var isIOS = /iPad|iPhone|iPod/.test(ua) ||
+      (platform === "MacIntel" && navigator.maxTouchPoints > 1);
+    var isMac = /Mac/.test(platform) && !isIOS;
+    var isAndroid = /Android/.test(ua);
+    var isWindows = /Win/.test(platform);
+    if (isIOS || isMac) return "apple";
+    if (isAndroid) return "android";
+    if (isWindows) return "windows";
+    return "other";
+  }
+
+  var CONFIG = {
+    apple:   { label: "Add to Apple Calendar",  href: WEBCAL_URL,  name: "Apple" },
+    android: { label: "Add to Google Calendar", href: GCAL_URL,    name: "Android" },
+    windows: { label: "Add to Outlook",         href: OUTLOOK_URL, name: "Windows" },
+    other:   { label: "Add to Google Calendar", href: GCAL_URL,    name: "your device" }
+  };
+
+  var choice = CONFIG[detectPlatform()];
+  var btn = document.getElementById("subscribe-btn");
+  var nameEl = document.getElementById("platform-name");
+  if (btn) {
+    btn.textContent = choice.label;
+    btn.setAttribute("href", choice.href);
+  }
+  if (nameEl) nameEl.textContent = choice.name;
+
+  var copyBtn = document.getElementById("copy-btn");
+  var copyLink = document.getElementById("copy-link");
+  var urlInput = document.getElementById("feed-url");
+
+  function resetCopyLabel() {
+    setTimeout(function () { if (copyBtn) copyBtn.textContent = "Copy"; }, 1800);
+  }
+
+  function fallbackCopy() {
+    if (!urlInput) return;
+    urlInput.removeAttribute("readonly");
+    urlInput.focus();
+    urlInput.select();
+    urlInput.setSelectionRange(0, FEED_URL.length);
+    try {
+      document.execCommand("copy");
+      if (copyBtn) copyBtn.textContent = "Copied";
+    } catch (e) {
+      if (copyBtn) copyBtn.textContent = "Select & Ctrl/Cmd+C";
+    }
+    urlInput.setAttribute("readonly", "readonly");
+    resetCopyLabel();
+  }
+
+  function doCopy() {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(FEED_URL).then(function () {
+        if (copyBtn) copyBtn.textContent = "Copied";
+        resetCopyLabel();
+      }, fallbackCopy);
+    } else {
+      fallbackCopy();
+    }
+  }
+
+  if (copyBtn) copyBtn.addEventListener("click", doCopy);
+  if (copyLink) copyLink.addEventListener("click", function (e) { e.preventDefault(); doCopy(); });
+  if (urlInput) urlInput.addEventListener("click", function () { urlInput.select(); });
+})();
+</script>
+</body>
+</html>
+"""
+
+
+def build_html(events: list[dict], cal_name: str) -> str:
+    webcal_url = "webcal://" + FEED_URL.split("://", 1)[-1]
+    gcal_url = "https://calendar.google.com/calendar/render?cid=" + _urlquote(FEED_URL)
+    outlook_url = (
+        "https://outlook.live.com/calendar/0/addfromweb?url="
+        + _urlquote(FEED_URL) + "&name=" + _urlquote(cal_name)
+    )
+
+    next_up = render_next_up(events[0] if events else None)
+    schedule = render_schedule_rows(events[:UPCOMING_LIMIT])
+
+    page = PAGE_TEMPLATE
+    page = page.replace("__CAL_NAME__", html.escape(cal_name))
+    page = page.replace("__NEXT_UP_BLOCK__", next_up)
+    page = page.replace("__SCHEDULE_ROWS__", schedule)
+    page = page.replace("__FEED_URL__", html.escape(FEED_URL))
+    page = page.replace("__WEBCAL_URL__", html.escape(webcal_url))
+    page = page.replace("__GCAL_URL__", html.escape(gcal_url))
+    page = page.replace("__OUTLOOK_URL__", html.escape(outlook_url))
+    page = page.replace("__GITHUB_URL__", html.escape(GITHUB_URL))
+    return page
+
+
+def _urlquote(s: str) -> str:
+    from urllib.parse import quote
+    return quote(s, safe="")
+
+
+def main():
+    events, cal_name = load_upcoming_events(ICS_FILE, TZ_NAME)
+    page = build_html(events, cal_name or DEFAULT_CAL_NAME)
+    os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
+    with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
+        f.write(page)
+    print(f"Wrote {OUTPUT_FILE} with {min(len(events), UPCOMING_LIMIT)} upcoming session(s) listed.")
+
+
+if __name__ == "__main__":
+    main()

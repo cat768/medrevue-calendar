@@ -9,7 +9,68 @@ permissions:
   contents: write            # needed to commit docs/calendar.ics back to the repo
 
 concurrency:
+  group: update-calename: Update Rehearsal Calendar
+
+on:
+  schedule:
+    - cron: "0 * * * *"   # every hour, on the hour (UTC)
+  workflow_dispatch: {}     # lets you trigger it manually from the Actions tab
+
+permissions:
+  contents: write            # needed to commit docs/calendar.ics back to the repo
+
+concurrency:
   group: update-calendar
+  cancel-in-progress: false
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r scripts/requirements.txt
+
+      - name: Run sync
+        env:
+          GOOGLE_DOC_ID: ${{ secrets.GOOGLE_DOC_ID }}
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+          TIMEZONE: "Australia/Adelaide"
+          CALENDAR_NAME: "Rehearsal Schedule"
+          CUTOFF_DATE: "2026-12-31"
+        run: python scripts/sync_calendar.py
+
+      - name: Regenerate landing page
+        # Runs every time, even when sync_calendar.py found no doc changes --
+        # "upcoming sessions" depends on the current time, not just on the
+        # doc content, so a session falling into the past can change the
+        # page even on an otherwise quiet run.
+        env:
+          FEED_URL: "https://calendar.medrevue.animeisamistake.com/calendar.ics"
+          TIMEZONE: "Australia/Adelaide"
+          CALENDAR_NAME: "Rehearsal Schedule"
+          UPCOMING_LIMIT: "8"
+          GITHUB_URL: "https://github.com/cat768/medrevue-calendar"
+        run: python scripts/generate_landing_page.py
+
+      - name: Commit updated calendar (if changed)
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add docs/calendar.ics docs/.last_hash docs/.location_cache.json docs/index.html
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "Auto-update rehearsal calendar [skip ci]"
+            git push
+          findar
   cancel-in-progress: false
 
 jobs:
