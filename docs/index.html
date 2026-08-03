@@ -5,6 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Rehearsal Schedule — MedRevue</title>
 <meta name="description" content="Subscribe to the MedRevue rehearsal calendar feed and see upcoming sessions.">
+<script>
+(function () {
+  try {
+    var t = localStorage.getItem("medrevue-theme");
+    if (t === "dark" || t === "light") {
+      document.documentElement.setAttribute("data-theme", t);
+    }
+  } catch (e) {}
+})();
+</script>
 <style>
   :root {
     --paper: #fdfcfa;
@@ -15,14 +25,48 @@
     --curtain: #8c1d2b;
     --curtain-dark: #6b1520;
     --gold: #a9822f;
+    --on-curtain: #fdfcfa;
     --radius: 10px;
     --max-w: 720px;
     --font-display: Georgia, "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
     --font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
     --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   }
+  /* Explicit dark theme (user picked "Dark") */
+  :root[data-theme="dark"] {
+    --paper: #16140f;
+    --paper-dim: #211e17;
+    --ink: #f2ede0;
+    --ink-dim: #b3ab97;
+    --rule: #3a3527;
+    --curtain: #a5283a;
+    --curtain-dark: #d6495c;
+  }
+  /* "System" (no explicit choice saved) follows the OS preference */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]):not([data-theme="dark"]) {
+      --paper: #16140f;
+      --paper-dim: #211e17;
+      --ink: #f2ede0;
+      --ink-dim: #b3ab97;
+      --rule: #3a3527;
+      --curtain: #a5283a;
+      --curtain-dark: #d6495c;
+    }
+  }
   * { box-sizing: border-box; }
-  html { color-scheme: light; }
+  .sr-only {
+    position: absolute;
+    width: 1px; height: 1px;
+    padding: 0; margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+  html { color-scheme: light dark; }
+  :root[data-theme="light"] { color-scheme: light; }
+  :root[data-theme="dark"] { color-scheme: dark; }
   body {
     margin: 0;
     background: var(--paper);
@@ -30,6 +74,7 @@
     font-family: var(--font-sans);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+    transition: background 0.15s ease, color 0.15s ease;
   }
   main {
     max-width: var(--max-w);
@@ -38,6 +83,45 @@
   }
   header.page-head {
     margin-bottom: 32px;
+  }
+  .head-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .theme-toggle {
+    display: inline-flex;
+    flex-shrink: 0;
+    border: 1px solid var(--rule);
+    border-radius: 8px;
+    padding: 2px;
+    gap: 2px;
+    background: var(--paper-dim);
+  }
+  .theme-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: var(--ink-dim);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .theme-btn svg { width: 15px; height: 15px; display: block; }
+  .theme-btn:hover { color: var(--ink); }
+  .theme-btn[aria-pressed="true"] {
+    background: var(--paper);
+    color: var(--curtain-dark);
+  }
+  .theme-btn:focus-visible {
+    outline: 2px solid var(--curtain);
+    outline-offset: 1px;
   }
   .eyebrow {
     font-family: var(--font-mono);
@@ -68,7 +152,7 @@
   .stub {
     position: relative;
     background: var(--curtain);
-    color: var(--paper);
+    color: var(--on-curtain);
     border-radius: var(--radius);
     padding: 22px 22px 30px;
     transform: rotate(-0.6deg);
@@ -140,7 +224,7 @@
     width: 100%;
     padding: 15px 20px;
     background: var(--curtain);
-    color: var(--paper);
+    color: var(--on-curtain);
     font-family: var(--font-sans);
     font-size: 16px;
     font-weight: 600;
@@ -163,7 +247,9 @@
   .alt-line a { color: var(--ink-dim); }
   .alt-links {
     display: flex;
-    gap: 14px;
+    flex-wrap: wrap;
+    row-gap: 4px;
+    column-gap: 14px;
     margin-top: 6px;
     font-family: var(--font-mono);
     font-size: 13px;
@@ -275,7 +361,23 @@
 <body>
 <main>
   <header class="page-head">
-    <p class="eyebrow">MedRevue</p>
+    <div class="head-row">
+      <p class="eyebrow">MedRevue</p>
+      <div class="theme-toggle" role="group" aria-label="Theme">
+        <button type="button" class="theme-btn" data-theme-choice="light" aria-pressed="false" title="Light">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"></circle><line x1="12" y1="2" x2="12" y2="4"></line><line x1="12" y1="20" x2="12" y2="22"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="2" y1="12" x2="4" y2="12"></line><line x1="20" y1="12" x2="22" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+          <span class="sr-only">Light</span>
+        </button>
+        <button type="button" class="theme-btn" data-theme-choice="dark" aria-pressed="false" title="Dark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+          <span class="sr-only">Dark</span>
+        </button>
+        <button type="button" class="theme-btn" data-theme-choice="system" aria-pressed="true" title="Match system">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+          <span class="sr-only">System</span>
+        </button>
+      </div>
+    </div>
     <h1>Rehearsal Schedule</h1>
     <p class="subhead">Auto-synced from the cast schedule doc. Subscribe once and every rehearsal shows up on its own — no more scrolling the group chat for a call time.</p>
   </header>
@@ -302,6 +404,7 @@
       <a href="webcal://calendar.medrevue.animeisamistake.com/calendar.ics">Apple Calendar</a>
       <a href="https://calendar.google.com/calendar/render?cid=https%3A%2F%2Fcalendar.medrevue.animeisamistake.com%2Fcalendar.ics">Google Calendar</a>
       <a href="https://outlook.live.com/calendar/0/addfromweb?url=https%3A%2F%2Fcalendar.medrevue.animeisamistake.com%2Fcalendar.ics&amp;name=Rehearsal%20Schedule">Outlook</a>
+      <a href="webcal://calendar.medrevue.animeisamistake.com/calendar.ics">Linux (GNOME Calendar)</a>
     </p>
     <noscript><p class="helper-text">JavaScript is off, so pick the right app above manually, or copy the feed URL below into any calendar app's "subscribe by URL" option.</p></noscript>
   </section>
@@ -438,17 +541,20 @@
     var isMac = /Mac/.test(platform) && !isIOS;
     var isAndroid = /Android/.test(ua);
     var isWindows = /Win/.test(platform);
+    var isLinux = !isAndroid && (/Linux/.test(platform) || /X11/.test(ua));
     if (isIOS || isMac) return "apple";
     if (isAndroid) return "android";
     if (isWindows) return "windows";
+    if (isLinux) return "linux";
     return "other";
   }
 
   var CONFIG = {
-    apple:   { label: "Add to Apple Calendar",  href: WEBCAL_URL,  name: "Apple" },
-    android: { label: "Add to Google Calendar", href: GCAL_URL,    name: "Android" },
-    windows: { label: "Add to Outlook",         href: OUTLOOK_URL, name: "Windows" },
-    other:   { label: "Add to Google Calendar", href: GCAL_URL,    name: "your device" }
+    apple:   { label: "Add to Apple Calendar",   href: WEBCAL_URL,  name: "Apple" },
+    android: { label: "Add to Google Calendar",  href: GCAL_URL,    name: "Android" },
+    windows: { label: "Add to Outlook",          href: OUTLOOK_URL, name: "Windows" },
+    linux:   { label: "Add to Calendar (GNOME)", href: WEBCAL_URL,  name: "Linux" },
+    other:   { label: "Add to Google Calendar",  href: GCAL_URL,    name: "your device" }
   };
 
   var choice = CONFIG[detectPlatform()];
@@ -498,6 +604,55 @@
   if (copyBtn) copyBtn.addEventListener("click", doCopy);
   if (copyLink) copyLink.addEventListener("click", function (e) { e.preventDefault(); doCopy(); });
   if (urlInput) urlInput.addEventListener("click", function () { urlInput.select(); });
+
+  // --- theme: light / dark / system (default) ---
+  var THEME_KEY = "medrevue-theme";
+  var root = document.documentElement;
+  var themeButtons = document.querySelectorAll(".theme-btn");
+
+  function getStoredTheme() {
+    try {
+      var t = localStorage.getItem(THEME_KEY);
+      return (t === "light" || t === "dark") ? t : "system";
+    } catch (e) {
+      return "system";
+    }
+  }
+
+  function applyTheme(pref) {
+    if (pref === "system") {
+      root.removeAttribute("data-theme");
+    } else {
+      root.setAttribute("data-theme", pref);
+    }
+    for (var i = 0; i < themeButtons.length; i++) {
+      var b = themeButtons[i];
+      b.setAttribute("aria-pressed", b.getAttribute("data-theme-choice") === pref ? "true" : "false");
+    }
+  }
+
+  function setTheme(pref) {
+    try {
+      if (pref === "system") localStorage.removeItem(THEME_KEY);
+      else localStorage.setItem(THEME_KEY, pref);
+    } catch (e) {}
+    applyTheme(pref);
+  }
+
+  for (var i = 0; i < themeButtons.length; i++) {
+    themeButtons[i].addEventListener("click", function () {
+      setTheme(this.getAttribute("data-theme-choice"));
+    });
+  }
+
+  applyTheme(getStoredTheme());
+
+  var darkMql = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)");
+  if (darkMql && darkMql.addEventListener) {
+    darkMql.addEventListener("change", function () {
+      if (getStoredTheme() === "system") applyTheme("system");
+    });
+  }
 })();
 </script>
 </body>
