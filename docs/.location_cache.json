@@ -1,0 +1,46 @@
+{
+  "ahms": {
+    "location": "AHMS",
+    "note": null
+  },
+  "ahms (tbc)": {
+    "location": "AHMS (tbc), Adelaide University, Adelaide SA",
+    "note": "Exact location for \"AHMS (tbc)\" could not be confirmed automatically -- check with the committee."
+  },
+  "ahms 4050 a/b": {
+    "location": "AHMS 4050 a/b, Adelaide University, Adelaide SA",
+    "note": "Exact location for \"AHMS 4050 a/b\" could not be confirmed automatically -- check with the committee."
+  },
+  "ahms 4050a/b": {
+    "location": "AHMS 4050a/b, Adelaide University, Adelaide SA",
+    "note": "Exact location for \"AHMS 4050a/b\" could not be confirmed automatically -- check with the committee."
+  },
+  "lady symon exercise studio": {
+    "location": "Lady Symon Exercise Studio, Adelaide University, Adelaide SA",
+    "note": "Exact location for \"Lady Symon Exercise Studio\" could not be confirmed automatically -- check with the committee."
+  },
+  "rumours cafe / lady symon exercise studio": {
+    "location": "Rumours Cafe / Lady Symon Exercise Studio, Adelaide University, Adelaide SA",
+    "note": "Exact location for \"Rumours Cafe / Lady Symon Exercise Studio\" could not be confirmed automatically -- check with the committee."
+  },
+  "scott theatre": {
+    "location": "SCOTT THEATRE",
+    "note": null
+  },
+  "scott theatre/lady symon exercise studio": {
+    "location": "Scott Theatre, University of Adelaide, North Terrace Campus, 500 North Terrace, Adelaide SA 5000, Australia; Lady Symon Exercise Studio, Lady Symon Building, University of Adelaide, North Terrace Campus, 500 North Terrace, Adelaide SA 5000, Australia (listed as \"Scott Theatre/Lady Symon Exercise Studio\")",
+    "note": null
+  },
+  "union house 12-1/exercise studio 1-4:30": {
+    "location": "Union House 12-1/Exercise Studio 1-4:30, Adelaide University, Adelaide SA",
+    "note": "Exact location for \"Union House 12-1/Exercise Studio 1-4:30\" could not be confirmed automatically -- check with the committee."
+  },
+  "union house 12-1/exercise studio 1-5/?rumours if we don\u2019t want to move": {
+    "location": "Union House 12-1/Exercise Studio 1-5/?Rumours if we don\u2019t want to move, Adelaide University, Adelaide SA",
+    "note": "Exact location for \"Union House 12-1/Exercise Studio 1-5/?Rumours if we don\u2019t want to move\" could not be confirmed automatically -- check with the committee."
+  },
+  "union house/exercise studio 12-4:30": {
+    "location": "Exercise Studio, Union House, Adelaide University (City Campus East), 1\u20112\u20113 North Terrace, Adelaide SA 5005, Australia (listed as \"Union House/Exercise Studio 12-4:30\")",
+    "note": null
+  }
+}

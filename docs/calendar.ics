@@ -7,345 +7,648 @@ BEGIN:VEVENT
 SUMMARY:Rehearsal #1
 DTSTART;TZID=Australia/Adelaide:20260802T120000
 DTEND;TZID=Australia/Adelaide:20260802T162000
-DTSTAMP:20260802T005931Z
+DTSTAMP:20260804T084647Z
 UID:b7006f9d-6a9e-5fbf-9d65-6bb93ed41fa7@animeisamistake.com
-LOCATION:Rumours Main Campus
+DESCRIPTION:12:00-12:30 Pump Up Songs\, vocal & dance warm‑up (everyone)
+ . 12:30-13:15 I’m Still Standing – singing (everyone). 13:15-14:15 I
+ ’m Still Standing – dance (everyone). 14:15-14:45 Break. 14:45-16:00 K
+ ing Candy – singing (full cast\, especially Joey\, Emma G\, Sarah\, Lily
+ \, Alana W\, Charli). 16:00-16:20 Scene A2S4 “No Freaking Way” (Gina\,
+  Angus\, Joey). Tutor: Kyan – ECG tute.\n\nExact location for "Rumours C
+ afe / Lady Symon Exercise Studio" could not be confirmed automatically -- 
+ check with the committee.
+LOCATION:Rumours Cafe / Lady Symon Exercise Studio\, Adelaide University\,
+  Adelaide SA
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:Rehearsal #2
 DTSTART;TZID=Australia/Adelaide:20260805T173000
 DTEND;TZID=Australia/Adelaide:20260805T201500
-DTSTAMP:20260802T005931Z
+DTSTAMP:20260804T084647Z
 UID:23dd84dd-9898-58cf-a129-e4339ddd2724@animeisamistake.com
-LOCATION:AHMS 4050a/b
+DESCRIPTION:17:30-17:45 Pump Up Songs\, vocal & dance warm‑up (everyone)
+ . 17:45-18:15 Revision: Dirt Block Life & I’m Still Standing – singing
+  (everyone). 18:15-19:15 ID Tonight – singing (chorus). 18:30-19:15 PTSD
+  – singing (Angus\, Chirath). 19:15-19:35 Dinner break. 19:35-20:15 I’
+ m Still Standing – dance (chorus). Tutor: Gigi – ABG tute.\n\nExact lo
+ cation for "AHMS 4050 a/b" could not be confirmed automatically -- check w
+ ith the committee.
+LOCATION:AHMS 4050 a/b\, Adelaide University\, Adelaide SA
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:Rehearsal #3
 DTSTART;TZID=Australia/Adelaide:20260809T120000
-DTEND;TZID=Australia/Adelaide:20260809T163000
-DTSTAMP:20260802T005931Z
-UID:595612e5-e816-5a26-89ea-976a65d00c07@animeisamistake.com
-LOCATION:Scott Theatre Main Campus
+DTEND;TZID=Australia/Adelaide:20260809T160000
+DTSTAMP:20260804T084647Z
+UID:9d850399-1f6e-55dc-95e3-2c51f4db83f9@animeisamistake.com
+DESCRIPTION:12:00-12:15 Pump Up Songs\, vocal & dance warm‑up (everyone)
+ . 12:15-12:30 Revision: King Candy – singing (chorus) and PTSD – singi
+ ng (Angus\, Chirath). 12:30-13:15 Revision: I’m Still Standing – dance
+ /singing (everyone). 13:15-13:45 Break. 13:45-14:15 Scene A1S4.2 – ID Wa
+ rd.
+LOCATION:SCOTT THEATRE
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:Rehearsal
+SUMMARY:Pump Up Songs / Vocal + Dance Warm Up
 DTSTART;TZID=Australia/Adelaide:20260812T173000
+DTEND;TZID=Australia/Adelaide:20260812T174500
+DTSTAMP:20260804T084647Z
+UID:3fa0d17e-db3f-5a53-9555-24b550413532@animeisamistake.com
+DESCRIPTION:Warm‑up for everyone.\n\nExact location for "AHMS 4050a/b" c
+ ould not be confirmed automatically -- check with the committee.
+LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Revision: ID Tonight – Singing/Dancing
+DTSTART;TZID=Australia/Adelaide:20260812T174500
+DTEND;TZID=Australia/Adelaide:20260812T181500
+DTSTAMP:20260804T084647Z
+UID:5ca21efd-71be-5059-865c-766203955c35@animeisamistake.com
+DESCRIPTION:Chorus vocal solos: Gina\, Angus\, Luke\, Emma J.\n\nExact loc
+ ation for "AHMS 4050a/b" could not be confirmed automatically -- check wit
+ h the committee.
+LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Singing: The Greatest Row
+DTSTART;TZID=Australia/Adelaide:20260812T181500
+DTEND;TZID=Australia/Adelaide:20260812T190000
+DTSTAMP:20260804T084647Z
+UID:0bcb642f-7a2e-53ff-b72a-a54c0e76598f@animeisamistake.com
+DESCRIPTION:Chorus – especially all EXEC.\n\nExact location for "AHMS 40
+ 50a/b" could not be confirmed automatically -- check with the committee.
+LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Dinner Break
+DTSTART;TZID=Australia/Adelaide:20260812T190000
+DTEND;TZID=Australia/Adelaide:20260812T192000
+DTSTAMP:20260804T084647Z
+UID:9f876e6a-4058-5817-924e-1d068e392927@animeisamistake.com
+DESCRIPTION:Exact location for "AHMS 4050a/b" could not be confirmed autom
+ atically -- check with the committee.
+LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Revision: King Candy – Singing
+DTSTART;TZID=Australia/Adelaide:20260812T192000
+DTEND;TZID=Australia/Adelaide:20260812T194000
+DTSTAMP:20260804T084647Z
+UID:5a80353e-e59c-5400-9c02-e69f5985154e@animeisamistake.com
+DESCRIPTION:Everyone.\n\nExact location for "AHMS 4050a/b" could not be co
+ nfirmed automatically -- check with the committee.
+LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Scene: A1S6.2 – ARMed and Ready (with chorus)
+DTSTART;TZID=Australia/Adelaide:20260812T194000
 DTEND;TZID=Australia/Adelaide:20260812T200000
-DTSTAMP:20260802T005931Z
-UID:d0949ee3-7b03-5197-95af-7c650fbb5548@animeisamistake.com
-LOCATION:AHMS 4050a/b
+DTSTAMP:20260804T084647Z
+UID:64a27d0b-9b7e-5f3e-8c46-6e738831c51d@animeisamistake.com
+DESCRIPTION:Everyone.\n\nExact location for "AHMS 4050a/b" could not be co
+ nfirmed automatically -- check with the committee.
+LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:Rehearsal
+SUMMARY:Pump Up Songs / Vocal + Dance Warm Up
 DTSTART;TZID=Australia/Adelaide:20260816T120000
+DTEND;TZID=Australia/Adelaide:20260816T121500
+DTSTAMP:20260804T084647Z
+UID:0efb1aee-412f-5562-8ceb-ed9922d5ebe7@animeisamistake.com
+DESCRIPTION:Warm‑up for everyone.
+LOCATION:Scott Theatre\, University of Adelaide\, North Terrace Campus\, 5
+ 00 North Terrace\, Adelaide SA 5000\, Australia\; Lady Symon Exercise Stud
+ io\, Lady Symon Building\, University of Adelaide\, North Terrace Campus\,
+  500 North Terrace\, Adelaide SA 5000\, Australia (listed as "Scott Theatr
+ e/Lady Symon Exercise Studio")
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Dance: King Candy
+DTSTART;TZID=Australia/Adelaide:20260816T121500
+DTEND;TZID=Australia/Adelaide:20260816T133000
+DTSTAMP:20260804T084647Z
+UID:28baf43e-6779-52b2-a1a2-d2ef116dc2fc@animeisamistake.com
+DESCRIPTION:Chorus.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Singing: Lady Symon
+DTSTART;TZID=Australia/Adelaide:20260816T133000
+DTEND;TZID=Australia/Adelaide:20260816T143000
+DTSTAMP:20260804T084647Z
+UID:77350b93-4edf-5239-b2b0-655a6a1e91e0@animeisamistake.com
+DESCRIPTION:Chorus.\n\nExact location for "Lady Symon Exercise Studio" cou
+ ld not be confirmed automatically -- check with the committee.
+LOCATION:Lady Symon Exercise Studio\, Adelaide University\, Adelaide SA
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Break
+DTSTART;TZID=Australia/Adelaide:20260816T143000
+DTEND;TZID=Australia/Adelaide:20260816T150000
+DTSTAMP:20260804T084647Z
+UID:bf8cc3bf-e5dd-50bd-99ba-839514e76640@animeisamistake.com
+LOCATION:Scott Theatre\, University of Adelaide\, North Terrace Campus\, 5
+ 00 North Terrace\, Adelaide SA 5000\, Australia\; Lady Symon Exercise Stud
+ io\, Lady Symon Building\, University of Adelaide\, North Terrace Campus\,
+  500 North Terrace\, Adelaide SA 5000\, Australia (listed as "Scott Theatr
+ e/Lady Symon Exercise Studio")
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Scene: A2S5 Competition 2 (I’m Still Standing?)
+DTSTART;TZID=Australia/Adelaide:20260816T150000
+DTEND;TZID=Australia/Adelaide:20260816T153000
+DTSTAMP:20260804T084647Z
+UID:97d4f9b9-925d-5394-8d0e-f07e195e6920@animeisamistake.com
+DESCRIPTION:Chirath\, Darshi\, Aneri\, King Candy\, Bella\, Rosa\, Ashley\
+ , Gigi\, Emma J\, Luke\, Angus\, Gina\, Emma G\, Sarah\, Lily K\, Duncan\,
+  Wynchell + ALL CHORUS.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Scene: A2S3 Geris ward (Sanitise… who?)
+DTSTART;TZID=Australia/Adelaide:20260816T153000
+DTEND;TZID=Australia/Adelaide:20260816T160000
+DTSTAMP:20260804T084647Z
+UID:472f200b-cf64-590a-9dc9-86517cb5756c@animeisamistake.com
+DESCRIPTION:Luke\, Emma J\, Aneri\, Emma M\, Garuika\, Hannah D\, Jocelyn\
+ , Lily G.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Revision: The Greatest Row – Singing\; King Candy – Singing\; 
+ I’m Still Standing – Singing
+DTSTART;TZID=Australia/Adelaide:20260816T160000
 DTEND;TZID=Australia/Adelaide:20260816T163000
-DTSTAMP:20260802T005931Z
-UID:3714b59e-3115-597a-b004-c0b7c1663c1e@animeisamistake.com
-LOCATION:Scott Theatre Main Campus
+DTSTAMP:20260804T084647Z
+UID:e56df75a-c825-5b89-bcbb-d9bf2259b811@animeisamistake.com
+DESCRIPTION:Everyone.
+LOCATION:Scott Theatre\, University of Adelaide\, North Terrace Campus\, 5
+ 00 North Terrace\, Adelaide SA 5000\, Australia\; Lady Symon Exercise Stud
+ io\, Lady Symon Building\, University of Adelaide\, North Terrace Campus\,
+  500 North Terrace\, Adelaide SA 5000\, Australia (listed as "Scott Theatr
+ e/Lady Symon Exercise Studio")
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:Rehearsal
+SUMMARY:Pump Up Songs / Vocal + Dance Warm Up
 DTSTART;TZID=Australia/Adelaide:20260819T173000
+DTEND;TZID=Australia/Adelaide:20260819T174500
+DTSTAMP:20260804T084647Z
+UID:7cc6ca42-50c0-5a22-8c99-d728704db46e@animeisamistake.com
+DESCRIPTION:Warm‑up for everyone.\n\nExact location for "AHMS 4050a/b" c
+ ould not be confirmed automatically -- check with the committee.
+LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Singing: Rubella
+DTSTART;TZID=Australia/Adelaide:20260819T174500
+DTEND;TZID=Australia/Adelaide:20260819T181500
+DTSTAMP:20260804T084647Z
+UID:3e1c1b34-a4eb-5a77-9078-fd25a83aa2e0@animeisamistake.com
+DESCRIPTION:Everyone\, especially Shanta\, Jacob\, Holly\, Hannah P\, Ramo
+ na\, Emma J.\n\nExact location for "AHMS 4050a/b" could not be confirmed a
+ utomatically -- check with the committee.
+LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Scene: A1S4.1 AMSS in Chaos
+DTSTART;TZID=Australia/Adelaide:20260819T183000
+DTEND;TZID=Australia/Adelaide:20260819T190000
+DTSTAMP:20260804T084647Z
+UID:eaef1db4-ff02-57c6-964f-ca2131470c87@animeisamistake.com
+DESCRIPTION:Exec.\n\nExact location for "AHMS 4050a/b" could not be confir
+ med automatically -- check with the committee.
+LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Revision: Once and For All
+DTSTART;TZID=Australia/Adelaide:20260819T190000
+DTEND;TZID=Australia/Adelaide:20260819T192000
+DTSTAMP:20260804T084647Z
+UID:6b365ff8-4b29-5191-b43c-7f62368504c6@animeisamistake.com
+DESCRIPTION:Chorus (especially Ashley\, Bella\, Emma G\, Gigi\, Holly\, Li
+ ly\, Rosa\, Rancis\, Gina).\n\nExact location for "AHMS 4050a/b" could not
+  be confirmed automatically -- check with the committee.
+LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Revision: PTSD – Singing
+DTSTART;TZID=Australia/Adelaide:20260819T192000
+DTEND;TZID=Australia/Adelaide:20260819T194000
+DTSTAMP:20260804T084647Z
+UID:b1659602-f22b-53fd-a0ad-ec5138f4aad6@animeisamistake.com
+DESCRIPTION:Angus\, Chirath.\n\nExact location for "AHMS 4050a/b" could no
+ t be confirmed automatically -- check with the committee.
+LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Dance: King Candy – with singing!
+DTSTART;TZID=Australia/Adelaide:20260819T192000
 DTEND;TZID=Australia/Adelaide:20260819T200000
-DTSTAMP:20260802T005931Z
-UID:f176dbc7-aba5-5b21-9121-d3e84f86d513@animeisamistake.com
-LOCATION:AHMS 4050a/b
+DTSTAMP:20260804T084647Z
+UID:793b54f8-4846-51ec-b07c-83593ba8b419@animeisamistake.com
+DESCRIPTION:Chorus (especially Joey\, Emma G\, Sarah\, Lily\, Alana W\, Ch
+ arli).\n\nExact location for "AHMS 4050a/b" could not be confirmed automat
+ ically -- check with the committee.
+LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:Rehearsal
+SUMMARY:Pump Up Songs / Vocal + Dance Warm Up
 DTSTART;TZID=Australia/Adelaide:20260823T120000
+DTEND;TZID=Australia/Adelaide:20260823T121500
+DTSTAMP:20260804T084647Z
+UID:79bd6997-299a-5a71-bc9d-1aad4c3dd4fd@animeisamistake.com
+DESCRIPTION:Warm‑up for everyone.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Scene: ID Ward A1S4.2
+DTSTART;TZID=Australia/Adelaide:20260823T121500
+DTEND;TZID=Australia/Adelaide:20260823T124000
+DTSTAMP:20260804T084647Z
+UID:56aa9a18-ed44-5ee8-ba81-3d621946c940@animeisamistake.com
+DESCRIPTION:Chorus.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Dance: Rubella
+DTSTART;TZID=Australia/Adelaide:20260823T124000
+DTEND;TZID=Australia/Adelaide:20260823T134000
+DTSTAMP:20260804T084647Z
+UID:9c9d43f1-6394-55bc-84dd-5e3d89ce466c@animeisamistake.com
+DESCRIPTION:Chorus.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Revision: Once and For All – Singing
+DTSTART;TZID=Australia/Adelaide:20260823T134000
+DTEND;TZID=Australia/Adelaide:20260823T140000
+DTSTAMP:20260804T084647Z
+UID:e7c4f8c1-4f35-5383-b71a-4e65e1f26770@animeisamistake.com
+DESCRIPTION:Chorus.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Break
+DTSTART;TZID=Australia/Adelaide:20260823T140000
+DTEND;TZID=Australia/Adelaide:20260823T143000
+DTSTAMP:20260804T084647Z
+UID:c5e60bcd-76f2-53e6-aa58-3408949ee7a0@animeisamistake.com
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Scene: A1S1 Vice Pres‑Keg
+DTSTART;TZID=Australia/Adelaide:20260823T143000
+DTEND;TZID=Australia/Adelaide:20260823T150000
+DTSTAMP:20260804T084647Z
+UID:922185e2-e7e8-559d-82fe-b9efe3f263ac@animeisamistake.com
+DESCRIPTION:Chorus – especially exec.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Dance: The Greatest Row
+DTSTART;TZID=Australia/Adelaide:20260823T150000
 DTEND;TZID=Australia/Adelaide:20260823T161500
-DTSTAMP:20260802T005931Z
-UID:28016725-7022-555a-bc18-5765359a6c19@animeisamistake.com
-LOCATION:Scott Theatre Main Campus
+DTSTAMP:20260804T084647Z
+UID:4afca908-f9c6-5445-85b3-e35ec285f321@animeisamistake.com
+DESCRIPTION:Chorus.
+LOCATION:SCOTT THEATRE
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:Rehearsal
+SUMMARY:Pump Up Songs / Vocal + Dance Warm Up
 DTSTART;TZID=Australia/Adelaide:20260826T173000
-DTEND;TZID=Australia/Adelaide:20260826T200000
-DTSTAMP:20260802T005931Z
-UID:a696e25e-4277-53a8-91fa-0cc7db0662d5@animeisamistake.com
-LOCATION:AHMS 4050a/b
+DTEND;TZID=Australia/Adelaide:20260826T174500
+DTSTAMP:20260804T084647Z
+UID:31397f1b-0b4b-5575-bcb6-51a9747cf2fa@animeisamistake.com
+DESCRIPTION:Warm‑up for everyone.\n\nExact location for "AHMS 4050 a/b" 
+ could not be confirmed automatically -- check with the committee.
+LOCATION:AHMS 4050 a/b\, Adelaide University\, Adelaide SA
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:Rehearsal
-DTSTART;TZID=Australia/Adelaide:20260830T120000
-DTEND;TZID=Australia/Adelaide:20260830T163000
-DTSTAMP:20260802T005931Z
-UID:18461084-6e12-52d9-9400-a15ff8299377@animeisamistake.com
-LOCATION:Scott Theatre Main Campus
+SUMMARY:Singing: Sanitise Me
+DTSTART;TZID=Australia/Adelaide:20260826T174500
+DTEND;TZID=Australia/Adelaide:20260826T181500
+DTSTAMP:20260804T084647Z
+UID:d7b3d6df-01ab-594a-9dae-ce8bd0739792@animeisamistake.com
+DESCRIPTION:Emma and Luke.\n\nExact location for "AHMS 4050 a/b" could not
+  be confirmed automatically -- check with the committee.
+LOCATION:AHMS 4050 a/b\, Adelaide University\, Adelaide SA
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:Rehearsal
-DTSTART;TZID=Australia/Adelaide:20260906T120000
-DTEND;TZID=Australia/Adelaide:20260906T163000
-DTSTAMP:20260802T005931Z
-UID:240ea31f-3603-501e-b15e-f13fa80c48e3@animeisamistake.com
-LOCATION:Scott Theatre Main Campus
+SUMMARY:Singing: Dirt Block Life
+DTSTART;TZID=Australia/Adelaide:20260826T174500
+DTEND;TZID=Australia/Adelaide:20260826T183000
+DTSTAMP:20260804T084647Z
+UID:b6b5f743-13bc-570d-bc39-b21144ea4ffd@animeisamistake.com
+DESCRIPTION:Chorus.\n\nExact location for "AHMS 4050 a/b" could not be con
+ firmed automatically -- check with the committee.
+LOCATION:AHMS 4050 a/b\, Adelaide University\, Adelaide SA
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:Rehearsal
-DTSTART;TZID=Australia/Adelaide:20260909T173000
-DTEND;TZID=Australia/Adelaide:20260909T200000
-DTSTAMP:20260802T005931Z
-UID:e766362e-52b8-5ad9-9776-437d91c0ef7a@animeisamistake.com
-LOCATION:AHMS 4050a/b
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:Rehearsal
-DTSTART;TZID=Australia/Adelaide:20260913T120000
-DTEND;TZID=Australia/Adelaide:20260913T163000
-DTSTAMP:20260802T005931Z
-UID:32cbac90-1cc2-58df-8e57-a3b09d761be5@animeisamistake.com
-DESCRIPTION:May be cancelled
-LOCATION:Union House/Exercise Studio
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:Rehearsal
-DTSTART;TZID=Australia/Adelaide:20260916T173000
-DTEND;TZID=Australia/Adelaide:20260916T203000
-DTSTAMP:20260802T005931Z
-UID:0e2c46b9-b5c8-53af-96aa-6d4dc6067431@animeisamistake.com
-LOCATION:AHMS 4050a/b
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:Rehearsal
-DTSTART;TZID=Australia/Adelaide:20260920T120000
-DTEND;TZID=Australia/Adelaide:20260920T163000
-DTSTAMP:20260802T005931Z
-UID:e39337eb-2248-5f13-bcff-8529b4bf973d@animeisamistake.com
-LOCATION:Union House/Exercise Studio
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:Rehearsal
-DTSTART;TZID=Australia/Adelaide:20260930T173000
-DTEND;TZID=Australia/Adelaide:20260930T203000
-DTSTAMP:20260802T005931Z
-UID:fd92edd0-ea77-55ad-a0cc-90d18b4537ae@animeisamistake.com
-LOCATION:AHMS 4050a/b
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:Rehearsal
-DTSTART;TZID=Australia/Adelaide:20261004T120000
-DTEND;TZID=Australia/Adelaide:20261004T170000
-DTSTAMP:20260802T005931Z
-UID:81a213db-065c-5431-bc8f-ba9d3a22fa88@animeisamistake.com
-LOCATION:Union House/Exercise Studio
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:Rehearsal
-DTSTART;TZID=Australia/Adelaide:20261007T173000
-DTEND;TZID=Australia/Adelaide:20261007T200000
-DTSTAMP:20260802T005931Z
-UID:ec968365-0f00-5169-907b-075cfd9c16b8@animeisamistake.com
-LOCATION:AHMS 4050a/b
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:Rehearsal
-DTSTART;TZID=Australia/Adelaide:20261011T120000
-DTEND;TZID=Australia/Adelaide:20261011T163000
-DTSTAMP:20260802T005931Z
-UID:ce7a713b-a65c-5cde-9b2e-03f1ecfee1f2@animeisamistake.com
-LOCATION:Union House/Exercise Studio
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:Show Day 1
-DTSTART;TZID=Australia/Adelaide:20261016T120000
-DTEND;TZID=Australia/Adelaide:20261016T233000
-DTSTAMP:20260802T005931Z
-UID:35136bd4-53fb-59b3-8eb2-7259dec83211@animeisamistake.com
-LOCATION:Scott Theatre Main Campus
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:Show Day 2
-DTSTART;TZID=Australia/Adelaide:20261017T000000
-DTEND;TZID=Australia/Adelaide:20261017T235900
-DTSTAMP:20260802T005931Z
-UID:c68890a1-1356-580b-a52f-63722d88eb0c@animeisamistake.com
-LOCATION:Scott Theatre Main Campus
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:Pack Up
-DTSTART;TZID=Australia/Adelaide:20261018T000000
-DTEND;TZID=Australia/Adelaide:20261018T235900
-DTSTAMP:20260802T005931Z
-UID:7a78d9e5-8458-50d5-b9a5-e22c0c3f8ba4@animeisamistake.com
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:Rehearsal #4
-DTSTART;TZID=Australia/Adelaide:20260812T173000
-DTEND;TZID=Australia/Adelaide:20260812T200000
-DTSTAMP:20260802T005931Z
-UID:4ea0ee52-6125-5af4-932e-89e6804447e9@animeisamistake.com
-LOCATION:AHMS 4050a/b
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:Rehearsal #5
-DTSTART;TZID=Australia/Adelaide:20260816T120000
-DTEND;TZID=Australia/Adelaide:20260816T163000
-DTSTAMP:20260802T005931Z
-UID:cbeff649-94cf-579c-9052-145e005e4821@animeisamistake.com
-LOCATION:Scott Theatre/Lady Symon Exercise Studio
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:Rehearsal #6
-DTSTART;TZID=Australia/Adelaide:20260819T173000
-DTEND;TZID=Australia/Adelaide:20260819T200000
-DTSTAMP:20260802T005931Z
-UID:fdc66845-6651-5157-85fc-0e4a99a6c840@animeisamistake.com
-LOCATION:AHMS 4050a/b
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:Rehearsal #7
-DTSTART;TZID=Australia/Adelaide:20260823T120000
-DTEND;TZID=Australia/Adelaide:20260823T161500
-DTSTAMP:20260802T005931Z
-UID:c2d4f5ae-ac05-5631-96ff-c2f34b9062eb@animeisamistake.com
-LOCATION:Scott Theatre
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:Rehearsal #8
-DTSTART;TZID=Australia/Adelaide:20260826T173000
-DTEND;TZID=Australia/Adelaide:20260826T193000
-DTSTAMP:20260802T005931Z
-UID:32051d23-04f9-5911-a8be-92f5cbde1208@animeisamistake.com
-LOCATION:AHMS 4050 a/b
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:Rehearsal #9
-DTSTART;TZID=Australia/Adelaide:20260830T120000
-DTEND;TZID=Australia/Adelaide:20260830T160000
-DTSTAMP:20260802T005931Z
-UID:f464bd7a-7ba7-593e-9681-83eab227ad8f@animeisamistake.com
-LOCATION:Scott Theatre
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:Rehearsal #10
-DTSTART;TZID=Australia/Adelaide:20260902T173000
-DTEND;TZID=Australia/Adelaide:20260902T190000
-DTSTAMP:20260802T005931Z
-UID:f86af7ad-38dd-51a6-b4cd-b564f113be88@animeisamistake.com
-LOCATION:AHMS 4050a/b
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:Rehearsal #11
-DTSTART;TZID=Australia/Adelaide:20260906T120000
-DTEND;TZID=Australia/Adelaide:20260906T163000
-DTSTAMP:20260802T005931Z
-UID:37895f29-ba82-5f6b-886e-50d3c182d7a2@animeisamistake.com
-LOCATION:Scott Theatre
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:Rehearsal #12
-DTSTART;TZID=Australia/Adelaide:20260909T173000
-DTEND;TZID=Australia/Adelaide:20260909T200000
-DTSTAMP:20260802T005931Z
-UID:b72bb64c-6d40-5ff3-ac39-5e2b895c62b8@animeisamistake.com
-LOCATION:AHMS
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:Rehearsal #14
-DTSTART;TZID=Australia/Adelaide:20260916T173000
-DTEND;TZID=Australia/Adelaide:20260916T203000
-DTSTAMP:20260802T005931Z
-UID:e98325d5-6bbb-5fad-bbc7-c89948e9d89a@animeisamistake.com
-LOCATION:AHMS
+SUMMARY:Scene: A2S5 – Competition Scene 2
+DTSTART;TZID=Australia/Adelaide:20260826T181500
+DTEND;TZID=Australia/Adelaide:20260826T191500
+DTSTAMP:20260804T084647Z
+UID:28070837-0e1a-54bb-b8e3-b3bc22af1744@animeisamistake.com
+DESCRIPTION:Everyone.\n\nExact location for "AHMS 4050 a/b" could not be c
+ onfirmed automatically -- check with the committee.
+LOCATION:AHMS 4050 a/b\, Adelaide University\, Adelaide SA
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:Pump Up Songs
-DTSTART;TZID=Australia/Adelaide:20260920T120000
-DTEND;TZID=Australia/Adelaide:20260920T121500
-DTSTAMP:20260802T005931Z
-UID:c827444b-891e-514a-b90a-16a85112f0bb@animeisamistake.com
+DTSTART;TZID=Australia/Adelaide:20260830T120000
+DTEND;TZID=Australia/Adelaide:20260830T121500
+DTSTAMP:20260804T084647Z
+UID:64d3e734-3680-594f-8652-69bd9e2f8a05@animeisamistake.com
+DESCRIPTION:Vocal + Dance Warm Up for everyone.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Revision: I’m Still Standing
+DTSTART;TZID=Australia/Adelaide:20260830T121500
+DTEND;TZID=Australia/Adelaide:20260830T123000
+DTSTAMP:20260804T084647Z
+UID:ab019a09-a298-5634-aea8-c9958190cf39@animeisamistake.com
+DESCRIPTION:Dancing and singing practice for everyone.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Revision: Dirt Block Life
+DTSTART;TZID=Australia/Adelaide:20260830T123000
+DTEND;TZID=Australia/Adelaide:20260830T124500
+DTSTAMP:20260804T084647Z
+UID:1f9598ec-4081-5e87-82c2-2cc0b057dee8@animeisamistake.com
+DESCRIPTION:Everyone revises the piece.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Dance: Dirt Block Life
+DTSTART;TZID=Australia/Adelaide:20260830T124500
+DTEND;TZID=Australia/Adelaide:20260830T140000
+DTSTAMP:20260804T084647Z
+UID:75b08128-d23b-5811-9596-284fcf974193@animeisamistake.com
+DESCRIPTION:Full cast dance rehearsal.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Dance: Once and For All
+DTSTART;TZID=Australia/Adelaide:20260830T143000
+DTEND;TZID=Australia/Adelaide:20260830T153000
+DTSTAMP:20260804T084647Z
+UID:f6f68fc8-6df0-5974-8071-f0fa7de54b76@animeisamistake.com
+DESCRIPTION:Everyone rehearses the dance.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Revision: Singing (tbc)
+DTSTART;TZID=Australia/Adelaide:20260830T153000
+DTEND;TZID=Australia/Adelaide:20260830T160000
+DTSTAMP:20260804T084647Z
+UID:aa501e73-4585-5bd7-934f-73b21e5dbbfe@animeisamistake.com
+DESCRIPTION:Everyone works on unspecified singing material.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Dance/Singing: Ward Block Tango
+DTSTART;TZID=Australia/Adelaide:20260830T153000
+DTEND;TZID=Australia/Adelaide:20260830T163000
+DTSTAMP:20260804T084647Z
+UID:3124fc59-17f2-547c-b9fc-f64b6c86937a@animeisamistake.com
+DESCRIPTION:Daniel Z\, Chenuli\, Maddy\, Laila\, Hannah D\, Jesse\, Darren
+ .
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Scene: A1S3
+DTSTART;TZID=Australia/Adelaide:20260902T173000
+DTEND;TZID=Australia/Adelaide:20260902T180000
+DTSTAMP:20260804T084647Z
+UID:6ac805dd-d56b-55fc-b7ef-d1279cf90f29@animeisamistake.com
+DESCRIPTION:Gina\, Angus\, Chirath\, Sarah\, plus possibly Joey/Emma G/Lil
+ y K.\n\nExact location for "AHMS 4050a/b" could not be confirmed automatic
+ ally -- check with the committee.
+LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Singing/Dance: PTSD & Me and the Knife
+DTSTART;TZID=Australia/Adelaide:20260902T180000
+DTEND;TZID=Australia/Adelaide:20260902T190000
+DTSTAMP:20260804T084647Z
+UID:f68032e6-2e34-5a4b-9e88-0113cf0a8c90@animeisamistake.com
+DESCRIPTION:PTSD with Chirath\, Angus\; Me and the Knife with Gina.\n\nExa
+ ct location for "AHMS 4050a/b" could not be confirmed automatically -- che
+ ck with the committee.
+LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Pump Up Songs
+DTSTART;TZID=Australia/Adelaide:20260906T120000
+DTEND;TZID=Australia/Adelaide:20260906T121500
+DTSTAMP:20260804T084647Z
+UID:fab629e4-5285-5cf4-9444-07993b2ec440@animeisamistake.com
+DESCRIPTION:Vocal + Dance Warm Up for everyone.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Revision: The Greatest Row
+DTSTART;TZID=Australia/Adelaide:20260906T121500
+DTEND;TZID=Australia/Adelaide:20260906T123000
+DTSTAMP:20260804T084647Z
+UID:b54172bf-687c-57e7-b17e-f900e7f4c3fa@animeisamistake.com
+DESCRIPTION:Full cast revision.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Revision: King Candy
+DTSTART;TZID=Australia/Adelaide:20260906T123000
+DTEND;TZID=Australia/Adelaide:20260906T130000
+DTSTAMP:20260804T084647Z
+UID:dfda7e73-b009-56d2-9f64-7e7a56ea7757@animeisamistake.com
+DESCRIPTION:Full cast revision.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Revision: Rubella
+DTSTART;TZID=Australia/Adelaide:20260906T130000
+DTEND;TZID=Australia/Adelaide:20260906T133000
+DTSTAMP:20260804T084647Z
+UID:7eeb77d1-1b06-55ef-b792-49fb6e6c5bee@animeisamistake.com
+DESCRIPTION:Full cast revision.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Revision: ID Tonight
+DTSTART;TZID=Australia/Adelaide:20260906T133000
+DTEND;TZID=Australia/Adelaide:20260906T140000
+DTSTAMP:20260804T084647Z
+UID:161ddda3-df3a-5fba-9c0a-e61284b6614f@animeisamistake.com
+DESCRIPTION:Full cast revision.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Revision: Dirt Block Life
+DTSTART;TZID=Australia/Adelaide:20260906T143000
+DTEND;TZID=Australia/Adelaide:20260906T150000
+DTSTAMP:20260804T084647Z
+UID:df67f11c-92ad-515d-a15f-ec903f951ae8@animeisamistake.com
+DESCRIPTION:Full cast revision.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Revision: Once and For All
+DTSTART;TZID=Australia/Adelaide:20260906T150000
+DTEND;TZID=Australia/Adelaide:20260906T153000
+DTSTAMP:20260804T084647Z
+UID:e3f77c2b-1273-5c01-85da-abb2fb06ab47@animeisamistake.com
+DESCRIPTION:Full cast revision.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Scene: A2S6 Graduation
+DTSTART;TZID=Australia/Adelaide:20260906T153000
+DTEND;TZID=Australia/Adelaide:20260906T160000
+DTSTAMP:20260804T084647Z
+UID:e6db0158-d066-5259-86d5-83d39bb58602@animeisamistake.com
+DESCRIPTION:Full cast scene work.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Revision: I’m Still Standing
+DTSTART;TZID=Australia/Adelaide:20260906T160000
+DTEND;TZID=Australia/Adelaide:20260906T163000
+DTSTAMP:20260804T084647Z
+UID:2eb1880f-2e81-50fd-890a-4b3d5fe043b1@animeisamistake.com
+DESCRIPTION:Full cast revision.
+LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Pump Up Songs
+DTSTART;TZID=Australia/Adelaide:20260909T173000
+DTEND;TZID=Australia/Adelaide:20260909T174500
+DTSTAMP:20260804T084647Z
+UID:af772743-654d-5ddd-b801-635cc84b34bb@animeisamistake.com
+DESCRIPTION:Vocal + Dance Warm Up for everyone.
+LOCATION:AHMS
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Revision & Dance/Singing: King Candy & Sanitise Me
+DTSTART;TZID=Australia/Adelaide:20260909T174500
+DTEND;TZID=Australia/Adelaide:20260909T181500
+DTSTAMP:20260804T084647Z
+UID:eb90542f-c09d-5009-9500-036def8390a3@animeisamistake.com
+DESCRIPTION:King Candy revision (Chorus)\; Sanitise Me dance/singing (Luke
+ \, Emma J).
+LOCATION:AHMS
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Scene: A1S5 Competition Scene 1
+DTSTART;TZID=Australia/Adelaide:20260909T181500
+DTEND;TZID=Australia/Adelaide:20260909T184500
+DTSTAMP:20260804T084647Z
+UID:0b1567c8-d1a2-5a34-8575-e9997a95a984@animeisamistake.com
+DESCRIPTION:Everyone rehearses the competition scene.
+LOCATION:AHMS
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Dinner
+DTSTART;TZID=Australia/Adelaide:20260909T184500
+DTEND;TZID=Australia/Adelaide:20260909T190500
+DTSTAMP:20260804T084647Z
+UID:50e7e68a-6178-54c2-8864-954e6594690b@animeisamistake.com
+LOCATION:AHMS
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Scene: A2S2 Vanellope can’t trust anyone
+DTSTART;TZID=Australia/Adelaide:20260909T190500
+DTEND;TZID=Australia/Adelaide:20260909T193500
+DTSTAMP:20260804T084647Z
+UID:3b352687-3dbb-542d-956e-a931acab74d7@animeisamistake.com
+DESCRIPTION:Gina\, Angus\, Chirath.
+LOCATION:AHMS
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:ACT 1 RUN-THROUGH
-DTSTART;TZID=Australia/Adelaide:20260920T121500
-DTEND;TZID=Australia/Adelaide:20260920T143000
-DTSTAMP:20260802T005931Z
-UID:af2d05db-28a5-5421-b610-dcb45ef809b5@animeisamistake.com
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:BREAK
-DTSTART;TZID=Australia/Adelaide:20260920T143000
-DTEND;TZID=Australia/Adelaide:20260920T150000
-DTSTAMP:20260802T005931Z
-UID:285dcd9e-8b84-5068-b27d-39617c5fcd5b@animeisamistake.com
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:FINISH ACT 1 RUN-THROUGH/any other revision
-DTSTART;TZID=Australia/Adelaide:20260920T150000
+DTSTART;TZID=Australia/Adelaide:20260920T120000
 DTEND;TZID=Australia/Adelaide:20260920T163000
-DTSTAMP:20260802T005931Z
-UID:cb68b2f3-174d-5161-a411-dbaf5e4267bb@animeisamistake.com
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:Pump Up Songs
-DTSTART;TZID=Australia/Adelaide:20260930T053000
-DTEND;TZID=Australia/Adelaide:20260930T054500
-DTSTAMP:20260802T005931Z
-UID:55d1cdc7-f6c5-59cb-886c-ddc68ff01b58@animeisamistake.com
+DTSTAMP:20260804T084647Z
+UID:46c06426-5ce5-5038-9ba3-ffcda2c059f1@animeisamistake.com
+DESCRIPTION:Pump Up Songs vocal + dance warm up (12:00-12:15). Full cast r
+ un‑through of Act 1 (12:15-14:30) with a break (14:30-15:00) and finis
+ h/revision (15:00-16:30).\n\nExact location for "Union House 12-1/Exercise
+  Studio 1-4:30" could not be confirmed automatically -- check with the com
+ mittee.
+LOCATION:Union House 12-1/Exercise Studio 1-4:30\, Adelaide University\, A
+ delaide SA
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:ACT 2 RUN-THROUGH
-DTSTART;TZID=Australia/Adelaide:20260930T054500
-DTEND;TZID=Australia/Adelaide:20260930T070000
-DTSTAMP:20260802T005931Z
-UID:8341b900-3768-5749-aab5-e105aaea0dfb@animeisamistake.com
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:BREAK
-DTSTART;TZID=Australia/Adelaide:20260930T070000
-DTEND;TZID=Australia/Adelaide:20260930T072000
-DTSTAMP:20260802T005931Z
-UID:f9b09e03-fd59-576a-ba86-563741a45120@animeisamistake.com
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:FINISH ACT 2 RUN-THROUGH/any other revision
-DTSTART;TZID=Australia/Adelaide:20260930T072000
-DTEND;TZID=Australia/Adelaide:20260930T083000
-DTSTAMP:20260802T005931Z
-UID:630db196-4d52-5138-bea3-d0f5c097c384@animeisamistake.com
+DTSTART;TZID=Australia/Adelaide:20260930T173000
+DTEND;TZID=Australia/Adelaide:20260930T203000
+DTSTAMP:20260804T084647Z
+UID:8612cca4-4b70-54c0-9d3e-68b043ac146e@animeisamistake.com
+DESCRIPTION:Pump Up Songs vocal + dance warm up (17:30-17:45). Full cast r
+ un‑through of Act 2 (17:45-19:00) with a short break (19:00-19:20) and
+  finish/revision (19:20-20:30).\n\nExact location for "AHMS (tbc)" could n
+ ot be confirmed automatically -- check with the committee.
+LOCATION:AHMS (tbc)\, Adelaide University\, Adelaide SA
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:SITZPROBE
-DTSTART;TZID=Australia/Adelaide:20260920T120000
-DTEND;TZID=Australia/Adelaide:20260920T170000
-DTSTAMP:20260802T005931Z
-UID:ce8fa16c-e524-55b4-a0f2-26f2bc311b57@animeisamistake.com
+DTSTART;TZID=Australia/Adelaide:20261004T120000
+DTEND;TZID=Australia/Adelaide:20261004T170000
+DTSTAMP:20260804T084647Z
+UID:a94b8703-011c-59a5-8324-0c313018f5fd@animeisamistake.com
+DESCRIPTION:Pump Up Songs vocal warm up (12:00-12:15). Full cast works on 
+ The Greatest Row\, King Candy\, Rubella\, ID Tonight\, Dirt Block Life (12
+ :15-14:30). Break (14:30-15:00). Songs from Once and For All\, I’m Still
+  Standing (15:00-15:30). Ward Block Tango\, Teach Her a Lesson\, PTSD\, Sa
+ nitise Me\, Me and the Knife (15:30-17:00)\; anyone in these songs should 
+ stay.\n\nExact location for "Union House 12-1/Exercise Studio 1-5/?Rumours
+  if we don’t want to move" could not be confirmed automatically -- check
+  with the committee.
 LOCATION:Union House 12-1/Exercise Studio 1-5/?Rumours if we don’t want 
- to move
+ to move\, Adelaide University\, Adelaide SA
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:Rehearsal #18
 DTSTART;TZID=Australia/Adelaide:20261007T173000
 DTEND;TZID=Australia/Adelaide:20261007T200000
-DTSTAMP:20260802T005931Z
+DTSTAMP:20260804T084647Z
 UID:bd12bb41-0965-5a68-b1fa-c6d94b253858@animeisamistake.com
+DESCRIPTION:Pump Up Songs vocal + dance warm up (17:30-17:45). Remaining s
+ chedule marked tbc\; dinner and other items to be confirmed.
 LOCATION:AHMS
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:FULL SHOW RUN-THROUGH
 DTSTART;TZID=Australia/Adelaide:20261011T120000
-DTEND;TZID=Australia/Adelaide:20261011T140000
-DTSTAMP:20260802T005931Z
-UID:22233c83-b738-5054-9c2e-f3c01a525b7b@animeisamistake.com
-LOCATION:Union House/Exercise Studio
+DTEND;TZID=Australia/Adelaide:20261011T163000
+DTSTAMP:20260804T084647Z
+UID:6d9ff081-de20-5891-988d-de378ded6f34@animeisamistake.com
+DESCRIPTION:Pump Up Songs vocal + dance warm up (12:00-12:15). Full cast r
+ uns Act 1 (12:15-14:30)\, break (14:30-15:00)\, then Act 2 (15:00-16:3
+ 0).
+LOCATION:Exercise Studio\, Union House\, Adelaide University (City Campus 
+ East)\, 1‑2‑3 North Terrace\, Adelaide SA 5005\, Australia (listed as 
+ "Union House/Exercise Studio 12-4:30")
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:DRESS REHEARSAL
 DTSTART;TZID=Australia/Adelaide:20261013T170000
 DTEND;TZID=Australia/Adelaide:20261013T220000
-DTSTAMP:20260802T005931Z
+DTSTAMP:20260804T084647Z
 UID:1869cbd9-1cee-5d66-969c-196c792f78b8@animeisamistake.com
+DESCRIPTION:Dress rehearsal for full show\; may run later but aim to finis
+ h by 22:00.
 LOCATION:SCOTT THEATRE
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:DRESS REHEARSAL
 DTSTART;TZID=Australia/Adelaide:20261014T170000
 DTEND;TZID=Australia/Adelaide:20261014T220000
-DTSTAMP:20260802T005931Z
+DTSTAMP:20260804T084647Z
 UID:2fca606a-7731-5868-a9cf-5c239e0cb821@animeisamistake.com
+DESCRIPTION:Second day of dress rehearsal\; may run later but aim to finis
+ h by 22:00.
 LOCATION:SCOTT THEATRE
 END:VEVENT
 END:VCALENDAR
