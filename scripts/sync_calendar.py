@@ -429,6 +429,12 @@ def resolve_location(raw_location: str, cache: dict, api_key: str, session: requ
     if not text or key in cache:
         return
 
+    # Med students already know where this one is -- pass it through as-is,
+    # no need to burn a Nominatim/Groq lookup on it.
+    if key == "ahms 4050a/b":
+        cache[key] = {"location": text, "note": None}
+        return
+
     if looks_directly_mappable(text, session):
         time.sleep(NOMINATIM_DELAY_SECONDS)
         cache[key] = {"location": text, "note": None}
