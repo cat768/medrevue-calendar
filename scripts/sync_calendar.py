@@ -536,6 +536,65 @@ def dedupe_same_time_slots(events: list) -> list:
     return [best[slot] for slot in order]
 
 
+def group_events_by_date(events: list) -> dict:
+    """Groups individual rehearsal entries by date, sorting each day's
+    entries by start time. Entries missing a usable date/start/end are
+    dropped, same as the old per-event build_ics silently skipped them."""
+    by_date: dict = {}
+    for ev in events:
+        if not ev.get("date") or not ev.get("start_time") or not ev.get("end_time"):
+            continue
+        by_date.setdefault(ev["date"], []).append(ev)
+
+    for day_events in by_date.values():
+        day_events.sort(key=lambda e: e["start_time"])
+
+    return by_date
+
+
+def _day_summary(day_events: list) -> str:
+    """One-line summary for the day's single calendar event. A single
+    session just uses its own title; multiple sessions get combined,
+    falling back to a plain count if that combination would be unwieldy."""
+    titles = [(ev.get("title") or "Rehearsal").strip() for ev in day_events]
+    if len(titles) == 1:
+        return titles[0]
+    joined = " / ".join(titles)
+    return joined if len(joined) <= 80 else f"{len(titles)} Rehearsals"
+
+
+def _day_location(day_events: list) -> str:
+    """Unique locations across the day's sessions, in order of appearance."""
+    locations = []
+    for ev in day_events:
+        loc = (ev.get("location") or "").strip()
+        if loc and loc not in locations:
+            locations.append(loc)
+    return "; ".join(locations)
+
+
+def _day_description(day_events: list) -> str:
+    """Folds every session on the day into the single event's notes, one
+    block per session: time range, title, location, then any notes."""
+    blocks = []
+    for ev in day_events:
+        title = (ev.get("title") or "Rehearsal").strip()
+        time_range = f"{ev.get('start_time', '?')}\u2013{ev.get('end_time', '?')}"
+        block_lines = [f"{time_range} \u2014 {title}"]
+
+        location = (ev.get("location") or "").strip()
+        if location:
+            block_lines.append(f"Location: {location}")
+
+        notes = (ev.get("notes") or "").strip()
+        if notes:
+            block_lines.append(notes)
+
+        blocks.append("\n".join(block_lines))
+
+    return "\n\n".join(blocks)
+
+
 def build_ics(events: list, tz_name: str, cal_name: str, doc_id: str) -> bytes:
     tz = ZoneInfo(tz_name)
     cal = Calendar()
@@ -544,37 +603,48 @@ def build_ics(events: list, tz_name: str, cal_name: str, doc_id: str) -> bytes:
     cal.add("x-wr-calname", cal_name)
     cal.add("x-wr-timezone", tz_name)
 
-    seen_signatures = set()
+    by_date = group_events_by_date(events)
 
-    for ev in events:
+    for date in sorted(by_date):
+        day_events = by_date[date]
+
         try:
-            start = datetime.strptime(
-                f"{ev['date']} {ev['start_time']}", "%Y-%m-%d %H:%M"
-            ).replace(tzinfo=tz)
-            end = datetime.strptime(
-                f"{ev['date']} {ev['end_time']}", "%Y-%m-%d %H:%M"
-            ).replace(tzinfo=tz)
-        except (KeyError, ValueError):
+            starts = [
+                datetime.strptime(
+                    f"{date} {ev['start_time']}", "%Y-%m-%d %H:%M"
+                ).replace(tzinfo=tz)
+                for ev in day_events
+            ]
+            ends = [
+                datetime.strptime(
+                    f"{date} {ev['end_time']}", "%Y-%m-%d %H:%M"
+                ).replace(tzinfo=tz)
+                for ev in day_events
+            ]
+        except ValueError:
             continue
 
-        # Prevent duplicate events from chunk boundary overlaps
-        dedup_key = f"{ev['date']}|{ev['start_time']}|{ev['end_time']}|{ev.get('title','')}"
-        if dedup_key in seen_signatures:
-            continue
-        seen_signatures.add(dedup_key)
+        start = min(starts)
+        end = max(ends)
 
-        uid = str(uuid.uuid5(uuid.NAMESPACE_URL, f"{doc_id}|{dedup_key}"))
+        # UID is keyed on the date only (not on content) so the same day
+        # keeps the same event across reruns -- calendar apps update it in
+        # place instead of duplicating it every time the doc changes.
+        uid = str(uuid.uuid5(uuid.NAMESPACE_URL, f"{doc_id}|{date}"))
 
         vevent = Event()
         vevent.add("uid", f"{uid}@animeisamistake.com")
-        vevent.add("summary", ev.get("title", "Rehearsal"))
+        vevent.add("summary", _day_summary(day_events))
         vevent.add("dtstart", start)
         vevent.add("dtend", end)
         vevent.add("dtstamp", datetime.now(dt_timezone.utc))
-        if ev.get("location"):
-            vevent.add("location", ev["location"])
-        if ev.get("notes"):
-            vevent.add("description", ev["notes"])
+
+        location = _day_location(day_events)
+        if location:
+            vevent.add("location", location)
+
+        vevent.add("description", _day_description(day_events))
+
         cal.add_component(vevent)
 
     return cal.to_ical()
