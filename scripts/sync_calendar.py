@@ -111,6 +111,15 @@ across the whole document.)
 - IMPORTANT: You may be shown a fragment of a larger document. Only extract \
 events that are clearly stated in this fragment. If a line or table entry is cut off, \
 ignore it.
+- AM/PM: this is a REHEARSAL schedule -- sessions run in the afternoon/evening, \
+never overnight. A breakdown table often states the meridiem once on the \
+overall block (e.g. "Full Cast Rehearsal 5:30pm-8:00pm") and then lists \
+sub-item rows with bare times ("5:45-6:15", "6:15-7:00", ...) that do NOT \
+repeat "pm". Those bare sub-times inherit the same meridiem as the block \
+they belong to. If you genuinely have no context to go on, treat any bare \
+hour from 1-8 as PM, not AM -- do not output a start_time or end_time \
+between 00:00 and 08:59 unless the source text explicitly says "am" or \
+"morning".
 """
 
 LOCATION_SYSTEM_PROMPT = """You help resolve short, informal venue names from a \
@@ -501,6 +510,44 @@ def resolve_event_locations(events: list, api_key: str) -> list:
     return events
 
 
+EARLIEST_PLAUSIBLE_HOUR = 1   # inclusive
+LATEST_IMPLAUSIBLE_HOUR = 8   # inclusive -- anything in [1,8] gets +12h
+
+
+def fix_ambiguous_am_pm(events: list) -> list:
+    """Second line of defense, independent of the prompt fix above. This is
+    a rehearsal schedule for a uni theatre society -- sessions are never
+    scheduled between midnight and 9am. If Groq still emits a start/end
+    time in that window (e.g. it read a bare "5:45" sub-item as AM despite
+    the block around it being stated in pm), shift it 12 hours forward.
+
+    Deliberately excludes hour 0 (00:xx) -- a literal midnight boundary is
+    ambiguous enough (genuine late finish vs. misparse) that guessing wrong
+    silently is worse than leaving it alone.
+
+    If the group ever schedules a genuine early-morning call (e.g. an 8am
+    tech load-in), this will mangle it -- narrow the range below or drop
+    the affected date from correction manually.
+    """
+
+    def _shift(time_str: str | None) -> str | None:
+        if not time_str:
+            return time_str
+        try:
+            hh, mm = time_str.split(":")
+            hh = int(hh)
+        except (ValueError, AttributeError):
+            return time_str
+        if EARLIEST_PLAUSIBLE_HOUR <= hh <= LATEST_IMPLAUSIBLE_HOUR:
+            return f"{hh + 12:02d}:{mm}"
+        return time_str
+
+    for ev in events:
+        ev["start_time"] = _shift(ev.get("start_time"))
+        ev["end_time"] = _shift(ev.get("end_time"))
+    return events
+
+
 def _slot_richness(ev: dict) -> tuple:
     """How much did we actually learn about this event? Used to pick a
     winner when the same time slot shows up more than once in the source doc
@@ -682,6 +729,8 @@ def main():
     today = datetime.now(ZoneInfo(tz_name)).strftime("%Y-%m-%d")
     events = call_groq_full_doc(full_doc_text, api_key, today)
     print(f"Parsed {len(events)} raw event(s).")
+
+    events = fix_ambiguous_am_pm(events)
 
     events = dedupe_same_time_slots(events)
     print(f"{len(events)} event(s) after merging same-timeslot duplicates.")
