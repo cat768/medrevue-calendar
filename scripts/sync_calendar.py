@@ -513,6 +513,79 @@ def resolve_event_locations(events: list, api_key: str) -> list:
 EARLIEST_PLAUSIBLE_HOUR = 1   # inclusive
 LATEST_IMPLAUSIBLE_HOUR = 8   # inclusive -- anything in [1,8] gets +12h
 
+# Matches a bare time or time range inside free text -- "5:45", "5:30-5:45",
+# "5:30‑8" (various dash chars) -- with an optional trailing meridiem that,
+# if present, applies to the whole range (e.g. "5:30-8 pm" means both ends
+# are pm, not just the second number).
+_NOTES_TIME_RE = re.compile(
+    r'(?<!\d)(\d{1,2}):(\d{2})'                # first time, "H:MM"
+    r'(?:\s*[-\u2010-\u2015]\s*(\d{1,2})(?::(\d{2}))?)?'  # optional "-H(:MM)"
+    r'\s*(am|pm|AM|PM)?'                       # optional meridiem for the group
+)
+
+
+def _shift_hour(hh: int) -> int:
+    if EARLIEST_PLAUSIBLE_HOUR <= hh <= LATEST_IMPLAUSIBLE_HOUR:
+        return hh + 12
+    return hh
+
+
+def _valid_clock_hour(hh: int) -> bool:
+    return 0 <= hh <= 23
+
+
+def _fix_notes_ambiguous_times(text: str | None) -> str | None:
+    """Same "sessions never start before 9am" correction as _shift() below,
+    applied to free-text notes instead of the structured start/end fields.
+
+    The structured-field fix only ever touched ev["start_time"]/["end_time"]
+    -- it never looked at the sub-time breakdowns folded into notes (e.g.
+    "Warm-up (5:30-5:45) with pump-up songs..."), so those stayed as
+    whatever bare hour the source text/LLM extraction gave them. That's
+    what produces things like a 5:30am warm-up showing up inside an
+    otherwise-correct 5:30pm-8:30pm event's description.
+
+    Deliberately conservative: any time (or either side of a range) that
+    already has an explicit am/pm marker is left completely untouched, even
+    if it's inside the ambiguous hour window -- an explicitly-stated time is
+    trusted over a guess, same philosophy as fix_ambiguous_am_pm() below.
+    Only bare, unmarked hours get shifted.
+    """
+    if not text:
+        return text
+
+    def repl(m: re.Match) -> str:
+        h1_str, mm1, h2_str, mm2, meridiem = m.groups()
+        h1 = int(h1_str)
+        h2 = int(h2_str) if h2_str is not None else None
+
+        # Not a plausible clock hour at all (e.g. matched something that
+        # isn't really a time, like a stray "35:45") -- leave it completely
+        # alone rather than guess.
+        if not _valid_clock_hour(h1) or (h2 is not None and not _valid_clock_hour(h2)):
+            return m.group(0)
+
+        if meridiem:
+            # Explicitly stated for this range -- trust the source, don't touch.
+            return m.group(0)
+
+        new_h1 = _shift_hour(h1)
+        if h2_str is None:
+            if new_h1 == h1:
+                return m.group(0)
+            return f"{new_h1:02d}:{mm1}"
+
+        new_h2 = _shift_hour(h2)
+        if new_h1 == h1 and new_h2 == h2:
+            return m.group(0)
+
+        dash_match = re.search(r'[-\u2010-\u2015]', m.group(0))
+        dash = dash_match.group(0) if dash_match else '-'
+        second = f"{new_h2:02d}:{mm2}" if mm2 is not None else f"{new_h2}"
+        return f"{new_h1:02d}:{mm1}{dash}{second}"
+
+    return _NOTES_TIME_RE.sub(repl, text)
+
 
 def fix_ambiguous_am_pm(events: list) -> list:
     """Second line of defense, independent of the prompt fix above. This is
@@ -545,6 +618,7 @@ def fix_ambiguous_am_pm(events: list) -> list:
     for ev in events:
         ev["start_time"] = _shift(ev.get("start_time"))
         ev["end_time"] = _shift(ev.get("end_time"))
+        ev["notes"] = _fix_notes_ambiguous_times(ev.get("notes"))
     return events
 
 
@@ -674,6 +748,31 @@ def build_ics(events: list, tz_name: str, cal_name: str, doc_id: str) -> bytes:
         start = min(starts)
         end = max(ends)
 
+        if end <= start:
+            # A same-day AM/PM misparse (or a genuinely overnight session
+            # the extraction didn't flag as such) can otherwise produce an
+            # end time before the start time -- e.g. a "7pm-9am" sub-item
+            # that was actually meant to read "7-9am" but got merged with a
+            # pm block elsewhere in the day. Calendar apps handle a
+            # negative-duration VEVENT inconsistently (some reject it,
+            # some silently drop it, some render it garbled), so rather
+            # than ship that, clamp to a same-day placeholder and flag it
+            # for a human to check against the source doc.
+            tqdm.write(
+                f"    Warning: {date} has end ({end.strftime('%H:%M')}) at "
+                f"or before start ({start.strftime('%H:%M')}) after merging "
+                f"the day's sessions -- clamping and flagging for review."
+            )
+            end = start.replace(hour=23, minute=59)
+            flag = (
+                "Automated note: this day's end time looked earlier than "
+                "its start time after merging sessions, likely an AM/PM "
+                "misread in the source doc -- times above may be wrong, "
+                "please check against the schedule doc."
+            )
+        else:
+            flag = None
+
         # UID is keyed on the date only (not on content) so the same day
         # keeps the same event across reruns -- calendar apps update it in
         # place instead of duplicating it every time the doc changes.
@@ -690,7 +789,10 @@ def build_ics(events: list, tz_name: str, cal_name: str, doc_id: str) -> bytes:
         if location:
             vevent.add("location", location)
 
-        vevent.add("description", _day_description(day_events))
+        description = _day_description(day_events)
+        if flag:
+            description = f"{description}\n\n{flag}" if description else flag
+        vevent.add("description", description)
 
         cal.add_component(vevent)
 
