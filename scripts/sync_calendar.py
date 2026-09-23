@@ -93,8 +93,15 @@ and don't include shoutouts, jokes, or baking rosters, that's not what people \
 need from a calendar reminder.
 
 Rules:
-- If the year is not stated, assume the nearest upcoming occurrence of that \
-month/day relative to today.
+- This document describes ONE continuous rehearsal season for a single show. \
+If any date in the document states an explicit year, every other date -- \
+even ones without a stated year -- belongs to that same season and that \
+same year. Do NOT resolve each bare month/day independently against \
+today's date; a season that runs across several months can have early \
+dates that look "in the past" relative to when this sync happens to run, \
+and they must still land in the season's year, not get bumped a year \
+forward. Only fall back to "nearest upcoming occurrence relative to today" \
+if the document gives you no year information anywhere to anchor to.
 - Skip rows that are clearly headers, not actual scheduled sessions.
 - If you cannot find any valid events, output an empty JSON array: []
 - Do not invent events that are not supported by the text.
@@ -622,6 +629,44 @@ def fix_ambiguous_am_pm(events: list) -> list:
     return events
 
 
+def drop_overnight_events(events: list) -> list:
+    """Third line of defense against AM/PM misreads. fix_ambiguous_am_pm
+    corrects individual bare start/end times, but a single event can still
+    end up with end_time <= start_time on the same date -- e.g. the source
+    doc literally has a sub-item like "7:00pm-9:00am" for what's actually a
+    same-evening block, and 9am sits just outside the shift range above (see
+    its docstring -- that exclusion is deliberate, a real 9am call is
+    plausible and this can't tell the two apart).
+
+    build_ics() already catches end <= start at the *day* level, after
+    merging all of a day's sub-events into one min(start)/max(end) blob --
+    but that only fires if the bad sub-item actually skews the day's overall
+    range. A malformed sub-item that falls inside an otherwise-sane day
+    (e.g. sandwiched between two normal evening blocks) can slip through
+    unflagged. This catches it per-event, before grouping, so it's never
+    silently absorbed into a day that looks fine on the surface.
+
+    Rather than guess which of start/end is the typo and silently "fix" it,
+    the event is dropped and reported -- this is a REHEARSAL schedule, a
+    genuine overnight session would be unusual enough that it deserves a
+    human looking at the source doc, not an automated guess.
+    """
+    kept = []
+    for ev in events:
+        start, end = ev.get("start_time"), ev.get("end_time")
+        if start and end and end <= start:
+            tqdm.write(
+                f"    Warning: dropping '{ev.get('title', '?')}' on "
+                f"{ev.get('date', '?')} -- end_time ({end}) is at or before "
+                f"start_time ({start}), likely an AM/PM misread in the "
+                "source doc. Check against the schedule doc and re-add "
+                "manually if it's a genuine overnight session."
+            )
+            continue
+        kept.append(ev)
+    return kept
+
+
 def _slot_richness(ev: dict) -> tuple:
     """How much did we actually learn about this event? Used to pick a
     winner when the same time slot shows up more than once in the source doc
@@ -833,6 +878,8 @@ def main():
     print(f"Parsed {len(events)} raw event(s).")
 
     events = fix_ambiguous_am_pm(events)
+
+    events = drop_overnight_events(events)
 
     events = dedupe_same_time_slots(events)
     print(f"{len(events)} event(s) after merging same-timeslot duplicates.")
