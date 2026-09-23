@@ -259,10 +259,30 @@
 
   /* --- schedule --- */
   section.schedule-section { margin: 40px 0; }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .section-head h2 { margin: 0; }
+  .section-count {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-dim);
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+  .limit-note {
+    color: var(--ink-dim);
+    font-size: 12.5px;
+    margin: 10px 0 0;
+  }
   .schedule { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
   .row {
     display: grid;
-    grid-template-columns: 52px 64px 1fr;
+    grid-template-columns: 58px 64px 1fr;
     gap: 14px;
     align-items: start;
     padding: 14px 0;
@@ -277,6 +297,7 @@
   .row-day { font-size: 11px; color: var(--ink-dim); letter-spacing: 0.06em; }
   .row-daynum { font-size: 20px; font-weight: 700; }
   .row-month { font-size: 11px; color: var(--ink-dim); letter-spacing: 0.06em; }
+  .row-year { font-size: 10px; color: var(--ink-dim); letter-spacing: 0.03em; margin-top: 1px; opacity: 0.8; }
   .row-time {
     font-family: var(--font-mono);
     font-size: 12.5px;
@@ -298,6 +319,39 @@
     margin-top: 2px;
   }
   .empty-state { color: var(--ink-dim); font-size: 15px; }
+
+  /* past rows: same layout, visually receded so the eye lands on what's
+     still ahead first, even if you've expanded the past section */
+  .row--past { opacity: 0.66; }
+  .row--past .row-title { font-weight: 500; }
+  .row--past .row-location { color: var(--ink-dim); }
+
+  /* --- past sessions (collapsed by default, pinned at the bottom) --- */
+  section.past-section { margin: 40px 0 8px; }
+  section.past-section summary {
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-size: 20px;
+    color: var(--ink);
+    padding: 4px 0;
+    list-style: none;
+  }
+  section.past-section summary::-webkit-details-marker { display: none; }
+  section.past-section summary::before {
+    content: "\25B8";
+    display: inline-block;
+    margin-right: 8px;
+    font-size: 15px;
+    color: var(--ink-dim);
+    transition: transform 0.15s ease;
+  }
+  section.past-section details[open] summary::before { transform: rotate(90deg); }
+  section.past-section summary .section-count { margin-left: 10px; }
+  section.past-section summary:focus-visible {
+    outline: 2px solid var(--curtain);
+    outline-offset: 2px;
+  }
+  section.past-section .schedule { margin-top: 14px; }
 
   /* --- feed url --- */
   section.feed-section { margin: 40px 0 8px; }
@@ -388,7 +442,7 @@
         <span class="stub-tag">Next up</span>
         <div class="stub-when">
           <span class="stub-day">WED</span>
-          <span class="stub-date">30 SEP</span>
+          <span class="stub-date">30 SEP 2026</span>
         </div>
         <div class="stub-time">5:30 pm – 8:30 pm</div>
         <h2 class="stub-title">Rehearsal #16 ACT 2 RUN-THROUGH / Full Cast Rehearsal</h2>
@@ -410,13 +464,17 @@
   </section>
 
   <section class="schedule-section">
-    <h2>Upcoming sessions</h2>
+    <div class="section-head">
+      <h2>Upcoming sessions</h2>
+      <span class="section-count">10 sessions</span>
+    </div>
     <ul class="schedule">
         <li class="row">
           <div class="row-date">
             <span class="row-day">WED</span>
             <span class="row-daynum">30</span>
             <span class="row-month">SEP</span>
+            <span class="row-year">2026</span>
           </div>
           <div class="row-time">5:30 pm<br>– 8:30 pm</div>
           <div class="row-details">
@@ -429,6 +487,7 @@
             <span class="row-day">SUN</span>
             <span class="row-daynum">4</span>
             <span class="row-month">OCT</span>
+            <span class="row-year">2026</span>
           </div>
           <div class="row-time">12:00 pm<br>– 5:00 pm</div>
           <div class="row-details">
@@ -441,6 +500,7 @@
             <span class="row-day">WED</span>
             <span class="row-daynum">7</span>
             <span class="row-month">OCT</span>
+            <span class="row-year">2026</span>
           </div>
           <div class="row-time">5:30 pm<br>– 8:00 pm</div>
           <div class="row-details">
@@ -453,6 +513,7 @@
             <span class="row-day">SUN</span>
             <span class="row-daynum">11</span>
             <span class="row-month">OCT</span>
+            <span class="row-year">2026</span>
           </div>
           <div class="row-time">12:00 pm<br>– 4:30 pm</div>
           <div class="row-details">
@@ -465,6 +526,7 @@
             <span class="row-day">TUE</span>
             <span class="row-daynum">13</span>
             <span class="row-month">OCT</span>
+            <span class="row-year">2026</span>
           </div>
           <div class="row-time">11:00 am<br>– 10:00 pm</div>
           <div class="row-details">
@@ -477,6 +539,7 @@
             <span class="row-day">WED</span>
             <span class="row-daynum">14</span>
             <span class="row-month">OCT</span>
+            <span class="row-year">2026</span>
           </div>
           <div class="row-time">5:00 pm<br>– 10:00 pm</div>
           <div class="row-details">
@@ -489,6 +552,7 @@
             <span class="row-day">THU</span>
             <span class="row-daynum">15</span>
             <span class="row-month">OCT</span>
+            <span class="row-year">2026</span>
           </div>
           <div class="row-time">12:00 pm<br>– 10:00 pm</div>
           <div class="row-details">
@@ -501,13 +565,41 @@
             <span class="row-day">FRI</span>
             <span class="row-daynum">16</span>
             <span class="row-month">OCT</span>
+            <span class="row-year">2026</span>
           </div>
           <div class="row-time">12:00 pm<br>– 11:30 pm</div>
           <div class="row-details">
             <div class="row-title">Show Day 1</div>
             <div><span class="row-location">Scott Theatre Main Campus, Adelaide University, Adelaide SA</span></div><div><span class="row-notes">12:00–23:30 — Show Day 1 Location: Scott Theatre Main Campus, Adelaide University, Adelaide SA Exact location for &quot;Scott Theatre Main Campus&quot; could not be conf…</span></div>
           </div>
+        </li>
+        <li class="row">
+          <div class="row-date">
+            <span class="row-day">SAT</span>
+            <span class="row-daynum">17</span>
+            <span class="row-month">OCT</span>
+            <span class="row-year">2026</span>
+          </div>
+          <div class="row-time">12:00 am<br>– 11:59 pm</div>
+          <div class="row-details">
+            <div class="row-title">Show Day 2</div>
+            <div><span class="row-location">Scott Theatre Main Campus, Adelaide University, Adelaide SA</span></div><div><span class="row-notes">00:00–23:59 — Show Day 2 Location: Scott Theatre Main Campus, Adelaide University, Adelaide SA All day performance. Exact location for &quot;Scott Theatre Main Camp…</span></div>
+          </div>
+        </li>
+        <li class="row">
+          <div class="row-date">
+            <span class="row-day">SUN</span>
+            <span class="row-daynum">18</span>
+            <span class="row-month">OCT</span>
+            <span class="row-year">2026</span>
+          </div>
+          <div class="row-time">12:00 am<br>– 11:59 pm</div>
+          <div class="row-details">
+            <div class="row-title">Pack Up (TBC)</div>
+            <div><span class="row-notes">00:00–23:59 — Pack Up (TBC) All day pack‑up, date uncertain.</span></div>
+          </div>
         </li></ul>
+    
   </section>
 
   <section class="feed-section">
@@ -518,6 +610,196 @@
     </div>
     <p class="helper-text">Paste this into any calendar app's "subscribe from URL" option. Updates hourly, straight from the feed — no need to re-download it.</p>
     <p class="feed-actions"><a id="copy-link" href="#">Copy link</a> · <a href="calendar.ics" download>Download .ics file</a></p>
+  </section>
+
+  <section class="past-section">
+    <details>
+      <summary>Past sessions <span class="section-count">14 sessions</span></summary>
+      <ul class="schedule schedule--past">
+        <li class="row row--past">
+          <div class="row-date">
+            <span class="row-day">SUN</span>
+            <span class="row-daynum">20</span>
+            <span class="row-month">SEP</span>
+            <span class="row-year">2026</span>
+          </div>
+          <div class="row-time">12:00 pm<br>– 4:30 pm</div>
+          <div class="row-details">
+            <div class="row-title">Rehearsal #15 ACT 1 RUN-THROUGH</div>
+            <div><span class="row-location">Union House 12-1/Exercise Studio 1-4:30, Adelaide University, Adelaide SA</span></div><div><span class="row-notes">12:00–16:30 — Rehearsal #15 ACT 1 RUN-THROUGH Location: Union House 12-1/Exercise Studio 1-4:30, Adelaide University, Adelaide SA 12:00-12:15 Pump Up Songs – V…</span></div>
+          </div>
+        </li>
+        <li class="row row--past">
+          <div class="row-date">
+            <span class="row-day">WED</span>
+            <span class="row-daynum">16</span>
+            <span class="row-month">SEP</span>
+            <span class="row-year">2026</span>
+          </div>
+          <div class="row-time">5:30 pm<br>– 8:30 pm</div>
+          <div class="row-details">
+            <div class="row-title">Rehearsal #14</div>
+            <div><span class="row-location">AHMS</span></div><div><span class="row-notes">17:30–20:30 — Rehearsal #14 Location: AHMS 17:30-17:45Pump Up Songs – Vocal + Dance Warm Up (everyone). 17:45-18:00Revision – The Greatest Row (everyone). 17:4…</span></div>
+          </div>
+        </li>
+        <li class="row row--past">
+          <div class="row-date">
+            <span class="row-day">SUN</span>
+            <span class="row-daynum">13</span>
+            <span class="row-month">SEP</span>
+            <span class="row-year">2026</span>
+          </div>
+          <div class="row-time">12:00 pm<br>– 4:30 pm</div>
+          <div class="row-details">
+            <div class="row-title">Rehearsal (TBC, may be cancelled)</div>
+            <div><span class="row-location">Union House/Exercise Studio, Adelaide University, Adelaide SA</span></div><div><span class="row-notes">12:00–16:30 — Rehearsal (TBC, may be cancelled) Location: Union House/Exercise Studio, Adelaide University, Adelaide SA Exact location for &quot;Union House/Exercis…</span></div>
+          </div>
+        </li>
+        <li class="row row--past">
+          <div class="row-date">
+            <span class="row-day">WED</span>
+            <span class="row-daynum">9</span>
+            <span class="row-month">SEP</span>
+            <span class="row-year">2026</span>
+          </div>
+          <div class="row-time">5:30 pm<br>– 8:00 pm</div>
+          <div class="row-details">
+            <div class="row-title">9 Rehearsals</div>
+            <div><span class="row-location">AHMS 4050a/b, Adelaide University, Adelaide SA; AHMS</span></div><div><span class="row-notes">17:30–20:00 — 9 Rehearsals Location: AHMS 4050a/b, Adelaide University, Adelaide SA; AHMS Exact location for &quot;AHMS 4050a/b&quot; could not be confirmed automaticall…</span></div>
+          </div>
+        </li>
+        <li class="row row--past">
+          <div class="row-date">
+            <span class="row-day">SUN</span>
+            <span class="row-daynum">6</span>
+            <span class="row-month">SEP</span>
+            <span class="row-year">2026</span>
+          </div>
+          <div class="row-time">11:30 am<br>– 5:30 pm</div>
+          <div class="row-details">
+            <div class="row-title">14 Rehearsals</div>
+            <div><span class="row-location">SCOTT THEATRE</span></div><div><span class="row-notes">11:30–17:30 — 14 Rehearsals Location: SCOTT THEATRE 11:30–12:00 — The Greatest Row (Soloists Only) Location: SCOTT THEATRE Soloists rehearsal for Exec + Chorus…</span></div>
+          </div>
+        </li>
+        <li class="row row--past">
+          <div class="row-date">
+            <span class="row-day">SUN</span>
+            <span class="row-daynum">30</span>
+            <span class="row-month">AUG</span>
+            <span class="row-year">2026</span>
+          </div>
+          <div class="row-time">12:00 pm<br>– 4:30 pm</div>
+          <div class="row-details">
+            <div class="row-title">9 Rehearsals</div>
+            <div><span class="row-location">SCOTT THEATRE</span></div><div><span class="row-notes">12:00–16:30 — 9 Rehearsals Location: SCOTT THEATRE 12:00–12:15 — Pump Up Songs Location: SCOTT THEATRE Vocal + Dance Warm Up for everyone. 12:15–12:30 — I’m St…</span></div>
+          </div>
+        </li>
+        <li class="row row--past">
+          <div class="row-date">
+            <span class="row-day">WED</span>
+            <span class="row-daynum">26</span>
+            <span class="row-month">AUG</span>
+            <span class="row-year">2026</span>
+          </div>
+          <div class="row-time">5:30 pm<br>– 8:30 pm</div>
+          <div class="row-details">
+            <div class="row-title">8 Rehearsals</div>
+            <div><span class="row-location">AHMS 4050a/b, Adelaide University, Adelaide SA; AHMS 4050 a/b, Adelaide University, Adelaide SA</span></div><div><span class="row-notes">17:30–20:30 — 8 Rehearsals Location: AHMS 4050a/b, Adelaide University, Adelaide SA; AHMS 4050 a/b, Adelaide University, Adelaide SA 17:30–20:00 — Full Cast Re…</span></div>
+          </div>
+        </li>
+        <li class="row row--past">
+          <div class="row-date">
+            <span class="row-day">SUN</span>
+            <span class="row-daynum">23</span>
+            <span class="row-month">AUG</span>
+            <span class="row-year">2026</span>
+          </div>
+          <div class="row-time">12:00 pm<br>– 4:30 pm</div>
+          <div class="row-details">
+            <div class="row-title">8 Rehearsals</div>
+            <div><span class="row-location">SCOTT THEATRE</span></div><div><span class="row-notes">12:00–16:30 — 8 Rehearsals Location: SCOTT THEATRE 12:00–16:15 — Full Cast Rehearsal Location: SCOTT THEATRE 12:00–12:15 — Pump Up Songs / Vocal + Dance Warm U…</span></div>
+          </div>
+        </li>
+        <li class="row row--past">
+          <div class="row-date">
+            <span class="row-day">WED</span>
+            <span class="row-daynum">19</span>
+            <span class="row-month">AUG</span>
+            <span class="row-year">2026</span>
+          </div>
+          <div class="row-time">5:30 pm<br>– 8:30 pm</div>
+          <div class="row-details">
+            <div class="row-title">7 Rehearsals</div>
+            <div><span class="row-location">AHMS 4050a/b, Adelaide University, Adelaide SA</span></div><div><span class="row-notes">17:30–20:30 — 7 Rehearsals Location: AHMS 4050a/b, Adelaide University, Adelaide SA 17:30–20:00 — Full Cast Rehearsal Location: AHMS 4050a/b, Adelaide Universi…</span></div>
+          </div>
+        </li>
+        <li class="row row--past">
+          <div class="row-date">
+            <span class="row-day">SUN</span>
+            <span class="row-daynum">16</span>
+            <span class="row-month">AUG</span>
+            <span class="row-year">2026</span>
+          </div>
+          <div class="row-time">12:00 pm<br>– 4:30 pm</div>
+          <div class="row-details">
+            <div class="row-title">8 Rehearsals</div>
+            <div><span class="row-location">SCOTT THEATRE; Scott Theatre, University of Adelaide, North Terrace Campus, 500 North Terrace, Adelaide SA 5000, Australia; Lady Symon Exercise Studio, Lady Symon Building, University of Adelaide, North Terrace Campus, 500 North Terrace, Adelaide SA 5000, Australia (listed as &quot;Scott Theatre/Lady Symon Exercise Studio&quot;)</span></div><div><span class="row-notes">12:00–16:30 — 8 Rehearsals Location: SCOTT THEATRE; Scott Theatre, University of Adelaide, North Terrace Campus, 500 North Terrace, Adelaide SA 5000, Australia…</span></div>
+          </div>
+        </li>
+        <li class="row row--past">
+          <div class="row-date">
+            <span class="row-day">WED</span>
+            <span class="row-daynum">12</span>
+            <span class="row-month">AUG</span>
+            <span class="row-year">2026</span>
+          </div>
+          <div class="row-time">5:30 pm<br>– 8:00 pm</div>
+          <div class="row-details">
+            <div class="row-title">8 Rehearsals</div>
+            <div><span class="row-location">AHMS 4050a/b, Adelaide University, Adelaide SA</span></div><div><span class="row-notes">17:30–20:00 — 8 Rehearsals Location: AHMS 4050a/b, Adelaide University, Adelaide SA Exact location for &quot;AHMS 4050a/b&quot; could not be confirmed automatically -- c…</span></div>
+          </div>
+        </li>
+        <li class="row row--past">
+          <div class="row-date">
+            <span class="row-day">SUN</span>
+            <span class="row-daynum">9</span>
+            <span class="row-month">AUG</span>
+            <span class="row-year">2026</span>
+          </div>
+          <div class="row-time">12:00 pm<br>– 4:00 pm</div>
+          <div class="row-details">
+            <div class="row-title">Rehearsal #3</div>
+            <div><span class="row-location">SCOTT THEATRE</span></div><div><span class="row-notes">12:00–16:00 — Rehearsal #3 Location: SCOTT THEATRE Warm‑up, ID Tonight (sing, chorus), I’m Still Standing (dance/sing), scene A1S4.2 – ID Ward.</span></div>
+          </div>
+        </li>
+        <li class="row row--past">
+          <div class="row-date">
+            <span class="row-day">WED</span>
+            <span class="row-daynum">5</span>
+            <span class="row-month">AUG</span>
+            <span class="row-year">2026</span>
+          </div>
+          <div class="row-time">5:30 pm<br>– 8:15 pm</div>
+          <div class="row-details">
+            <div class="row-title">Rehearsal #2</div>
+            <div><span class="row-location">AHMS 4050a/b, Adelaide University, Adelaide SA</span></div><div><span class="row-notes">17:30–20:15 — Rehearsal #2 Location: AHMS 4050a/b, Adelaide University, Adelaide SA Pump‑up, revision of Dirt Block Life &amp; I’m Still Standing (sing), ID Tonigh…</span></div>
+          </div>
+        </li>
+        <li class="row row--past">
+          <div class="row-date">
+            <span class="row-day">SUN</span>
+            <span class="row-daynum">2</span>
+            <span class="row-month">AUG</span>
+            <span class="row-year">2026</span>
+          </div>
+          <div class="row-time">12:00 pm<br>– 4:20 pm</div>
+          <div class="row-details">
+            <div class="row-title">Rehearsal #1</div>
+            <div><span class="row-location">Rumours Main Campus, Adelaide University, Adelaide SA</span></div><div><span class="row-notes">12:00–16:20 — Rehearsal #1 Location: Rumours Main Campus, Adelaide University, Adelaide SA Locations: Rumours Cafe (12:00-13:15) and Lady Symon Exercise Studio…</span></div>
+          </div>
+        </li></ul>
+      
+    </details>
   </section>
 
   <footer>

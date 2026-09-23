@@ -6,14 +6,19 @@ this script never talks to the Google Doc or Groq, it just re-renders
 whatever sync_calendar.py last wrote) and produces:
 
   - a "next up" card for the soonest session
-  - a list of upcoming sessions (default: next 8)
+  - an "Upcoming sessions" list (every session that hasn't finished yet)
+  - a "Past sessions" list, collapsed by default, pinned to the very bottom
+    of the page (below the subscribe/feed sections) -- this is what makes
+    the page useful for sanity-checking a sync: every event the feed has
+    ever produced is on the page somewhere, split cleanly by whether it's
+    still ahead of us or already happened, each one dated with its year so
+    nothing is ambiguous across a year boundary.
   - a subscribe button that adapts to the visitor's device (Apple Calendar /
     Google Calendar / Outlook), detected client-side in the browser
   - a read-only feed URL box with a copy button, plus a manual download link
 
-Runs every workflow execution (not just when the doc changes) because "which
-events are upcoming" depends on the current time, not just on the doc
-content.
+Runs every workflow execution (not just when the doc changes) because
+"upcoming vs past" depends on the current time, not just on the doc content.
 
 Optional env vars (mirror sync_calendar.py where they overlap):
   FEED_URL        - absolute HTTPS URL of the .ics feed, default the
@@ -21,7 +26,13 @@ Optional env vars (mirror sync_calendar.py where they overlap):
   TIMEZONE        - IANA tz name, default "Australia/Adelaide"
   CALENDAR_NAME   - fallback display name if the ICS has no X-WR-CALNAME,
                     default "Rehearsal Schedule"
-  UPCOMING_LIMIT  - how many sessions to list, default 8
+  UPCOMING_LIMIT  - how many upcoming sessions to list, default 0 (unlimited
+                    -- show every upcoming session, since this page doubles
+                    as the sanity-check view for the sync)
+  PAST_LIMIT      - how many past sessions to list (most recent first),
+                    default 0 (unlimited). Past sessions live in a collapsed
+                    <details> section so an unlimited count doesn't bloat
+                    the page a first-time visitor sees.
   GITHUB_URL      - repo link for the footer, default cat768/medrevue-calendar
 """
 
@@ -40,18 +51,33 @@ FEED_URL = os.environ.get(
 )
 TZ_NAME = os.environ.get("TIMEZONE", "Australia/Adelaide")
 DEFAULT_CAL_NAME = os.environ.get("CALENDAR_NAME", "Rehearsal Schedule")
-UPCOMING_LIMIT = int(os.environ.get("UPCOMING_LIMIT", "8"))
+UPCOMING_LIMIT = int(os.environ.get("UPCOMING_LIMIT", "0"))
+PAST_LIMIT = int(os.environ.get("PAST_LIMIT", "0"))
 GITHUB_URL = os.environ.get("GITHUB_URL", "https://github.com/cat768/medrevue-calendar")
 
 
 # ---------------------------------------------------------------- parsing --
 
-def load_upcoming_events(ics_path: str, tz_name: str) -> tuple[list[dict], str | None]:
-    """Returns (events, calendar_name). events is sorted ascending, kept if
-    the session hasn't finished yet. calendar_name is None if the file is
-    missing (first-run / not synced yet)."""
+def load_events(
+    ics_path: str, tz_name: str
+) -> tuple[list[dict], list[dict], str | None]:
+    """Returns (upcoming, past, calendar_name).
+
+    Every VEVENT in the feed is kept (nothing is silently dropped, which is
+    the whole point of the split -- a maintainer sanity-checking a sync run
+    should be able to see the full history, not just what's ahead). Each
+    event is bucketed by whether it has already finished as of "now":
+
+      - upcoming: sorted ascending (soonest first), same as before.
+      - past:     sorted descending (most recently finished first), since
+                  that's what you want at a glance when checking "did the
+                  last few sessions come through correctly".
+
+    calendar_name is None if the file is missing (first-run / not synced
+    yet).
+    """
     if not os.path.exists(ics_path):
-        return [], None
+        return [], [], None
 
     with open(ics_path, "rb") as f:
         cal = Calendar.from_ical(f.read())
@@ -60,7 +86,8 @@ def load_upcoming_events(ics_path: str, tz_name: str) -> tuple[list[dict], str |
     tz = ZoneInfo(tz_name)
     now = datetime.now(tz)
 
-    events = []
+    upcoming: list[dict] = []
+    past: list[dict] = []
     for comp in cal.walk("VEVENT"):
         dtstart_prop = comp.get("dtstart")
         if dtstart_prop is None:
@@ -80,19 +107,22 @@ def load_upcoming_events(ics_path: str, tz_name: str) -> tuple[list[dict], str |
             if isinstance(end_dt, datetime):
                 end = end_dt.replace(tzinfo=tz) if end_dt.tzinfo is None else end_dt.astimezone(tz)
 
-        if end < now:
-            continue  # already finished
-
-        events.append({
+        event = {
             "start": start,
             "end": end,
             "title": str(comp.get("summary") or "Rehearsal").strip(),
             "location": str(comp.get("location") or "").strip(),
             "notes": str(comp.get("description") or "").strip(),
-        })
+        }
 
-    events.sort(key=lambda e: e["start"])
-    return events, cal_name
+        if end < now:
+            past.append(event)
+        else:
+            upcoming.append(event)
+
+    upcoming.sort(key=lambda e: e["start"])
+    past.sort(key=lambda e: e["start"], reverse=True)
+    return upcoming, past, cal_name
 
 
 # --------------------------------------------------------------- rendering --
@@ -125,7 +155,7 @@ def render_next_up(event: dict | None) -> str:
         <span class="stub-tag">Next up</span>
         <div class="stub-when">
           <span class="stub-day">{html.escape(start.strftime("%a").upper())}</span>
-          <span class="stub-date">{html.escape(start.strftime("%-d %b").upper())}</span>
+          <span class="stub-date">{html.escape(start.strftime("%-d %b %Y").upper())}</span>
         </div>
         <div class="stub-time">{html.escape(fmt_time(event["start"]))} \u2013 {html.escape(fmt_time(event["end"]))}</div>
         <h2 class="stub-title">{html.escape(event["title"])}</h2>
@@ -134,13 +164,21 @@ def render_next_up(event: dict | None) -> str:
     </section>"""
 
 
-def render_schedule_rows(events: list[dict]) -> str:
+def render_schedule_rows(events: list[dict], variant: str = "upcoming") -> str:
+    """variant is "upcoming" or "past" -- controls the empty-state copy and
+    adds a dimming modifier class to past rows so the two sections are
+    visually distinct even before you notice which heading you're under."""
     if not events:
+        if variant == "past":
+            return """
+        <p class="empty-state">No past sessions yet \u2014 nothing on the
+        schedule has happened yet.</p>"""
         return """
         <p class="empty-state">No sessions on the schedule right now. The feed
         is still live \u2014 check back after the next sync, or flag it to the
         committee if the doc hasn't moved in a while.</p>"""
 
+    row_class = "row row--past" if variant == "past" else "row"
     rows = []
     for ev in events:
         start = ev["start"]
@@ -152,11 +190,12 @@ def render_schedule_rows(events: list[dict]) -> str:
         meta_html = "".join(f"<div>{b}</div>" for b in meta_bits)
 
         rows.append(f"""
-        <li class="row">
+        <li class="{row_class}">
           <div class="row-date">
             <span class="row-day">{html.escape(start.strftime("%a").upper())}</span>
             <span class="row-daynum">{html.escape(start.strftime("%-d"))}</span>
             <span class="row-month">{html.escape(start.strftime("%b").upper())}</span>
+            <span class="row-year">{html.escape(start.strftime("%Y"))}</span>
           </div>
           <div class="row-time">{html.escape(fmt_time(ev["start"]))}<br>\u2013 {html.escape(fmt_time(ev["end"]))}</div>
           <div class="row-details">
@@ -165,7 +204,20 @@ def render_schedule_rows(events: list[dict]) -> str:
           </div>
         </li>""")
 
-    return f'<ul class="schedule">{"".join(rows)}</ul>'
+    schedule_class = "schedule schedule--past" if variant == "past" else "schedule"
+    return f'<ul class="{schedule_class}">{"".join(rows)}</ul>'
+
+
+def render_limit_note(shown: int, total: int, limit: int) -> str:
+    """Small note when a LIMIT env var actually truncated the list, so it's
+    obvious on the page (not just in the workflow logs) that you're not
+    looking at everything."""
+    if limit <= 0 or total <= shown:
+        return ""
+    return (
+        f'<p class="limit-note">Showing {shown} of {total} \u2014 '
+        f'the rest are still in the feed.</p>'
+    )
 
 
 PAGE_TEMPLATE = """<!doctype html>
@@ -429,10 +481,30 @@ PAGE_TEMPLATE = """<!doctype html>
 
   /* --- schedule --- */
   section.schedule-section { margin: 40px 0; }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+  .section-head h2 { margin: 0; }
+  .section-count {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--ink-dim);
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+  .limit-note {
+    color: var(--ink-dim);
+    font-size: 12.5px;
+    margin: 10px 0 0;
+  }
   .schedule { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--rule); }
   .row {
     display: grid;
-    grid-template-columns: 52px 64px 1fr;
+    grid-template-columns: 58px 64px 1fr;
     gap: 14px;
     align-items: start;
     padding: 14px 0;
@@ -447,6 +519,7 @@ PAGE_TEMPLATE = """<!doctype html>
   .row-day { font-size: 11px; color: var(--ink-dim); letter-spacing: 0.06em; }
   .row-daynum { font-size: 20px; font-weight: 700; }
   .row-month { font-size: 11px; color: var(--ink-dim); letter-spacing: 0.06em; }
+  .row-year { font-size: 10px; color: var(--ink-dim); letter-spacing: 0.03em; margin-top: 1px; opacity: 0.8; }
   .row-time {
     font-family: var(--font-mono);
     font-size: 12.5px;
@@ -468,6 +541,39 @@ PAGE_TEMPLATE = """<!doctype html>
     margin-top: 2px;
   }
   .empty-state { color: var(--ink-dim); font-size: 15px; }
+
+  /* past rows: same layout, visually receded so the eye lands on what's
+     still ahead first, even if you've expanded the past section */
+  .row--past { opacity: 0.66; }
+  .row--past .row-title { font-weight: 500; }
+  .row--past .row-location { color: var(--ink-dim); }
+
+  /* --- past sessions (collapsed by default, pinned at the bottom) --- */
+  section.past-section { margin: 40px 0 8px; }
+  section.past-section summary {
+    cursor: pointer;
+    font-family: var(--font-display);
+    font-size: 20px;
+    color: var(--ink);
+    padding: 4px 0;
+    list-style: none;
+  }
+  section.past-section summary::-webkit-details-marker { display: none; }
+  section.past-section summary::before {
+    content: "\\25B8";
+    display: inline-block;
+    margin-right: 8px;
+    font-size: 15px;
+    color: var(--ink-dim);
+    transition: transform 0.15s ease;
+  }
+  section.past-section details[open] summary::before { transform: rotate(90deg); }
+  section.past-section summary .section-count { margin-left: 10px; }
+  section.past-section summary:focus-visible {
+    outline: 2px solid var(--curtain);
+    outline-offset: 2px;
+  }
+  section.past-section .schedule { margin-top: 14px; }
 
   /* --- feed url --- */
   section.feed-section { margin: 40px 0 8px; }
@@ -568,8 +674,12 @@ PAGE_TEMPLATE = """<!doctype html>
   </section>
 
   <section class="schedule-section">
-    <h2>Upcoming sessions</h2>
+    <div class="section-head">
+      <h2>Upcoming sessions</h2>
+      <span class="section-count">__UPCOMING_COUNT__</span>
+    </div>
     __SCHEDULE_ROWS__
+    __UPCOMING_LIMIT_NOTE__
   </section>
 
   <section class="feed-section">
@@ -580,6 +690,14 @@ PAGE_TEMPLATE = """<!doctype html>
     </div>
     <p class="helper-text">Paste this into any calendar app's "subscribe from URL" option. Updates hourly, straight from the feed \u2014 no need to re-download it.</p>
     <p class="feed-actions"><a id="copy-link" href="#">Copy link</a> \u00b7 <a href="calendar.ics" download>Download .ics file</a></p>
+  </section>
+
+  <section class="past-section">
+    <details>
+      <summary>Past sessions <span class="section-count">__PAST_COUNT__</span></summary>
+      __PAST_ROWS__
+      __PAST_LIMIT_NOTE__
+    </details>
   </section>
 
   <footer>
@@ -722,7 +840,11 @@ PAGE_TEMPLATE = """<!doctype html>
 """
 
 
-def build_html(events: list[dict], cal_name: str) -> str:
+def _plural(n: int, noun: str) -> str:
+    return f"{n} {noun}" if n == 1 else f"{n} {noun}s"
+
+
+def build_html(upcoming: list[dict], past: list[dict], cal_name: str) -> str:
     webcal_url = "webcal://" + FEED_URL.split("://", 1)[-1]
     gcal_url = "https://calendar.google.com/calendar/render?cid=" + _urlquote(FEED_URL)
     outlook_url = (
@@ -730,13 +852,24 @@ def build_html(events: list[dict], cal_name: str) -> str:
         + _urlquote(FEED_URL) + "&name=" + _urlquote(cal_name)
     )
 
-    next_up = render_next_up(events[0] if events else None)
-    schedule = render_schedule_rows(events[:UPCOMING_LIMIT])
+    upcoming_shown = upcoming[:UPCOMING_LIMIT] if UPCOMING_LIMIT > 0 else upcoming
+    past_shown = past[:PAST_LIMIT] if PAST_LIMIT > 0 else past
+
+    next_up = render_next_up(upcoming[0] if upcoming else None)
+    upcoming_rows = render_schedule_rows(upcoming_shown, variant="upcoming")
+    past_rows = render_schedule_rows(past_shown, variant="past")
+    upcoming_limit_note = render_limit_note(len(upcoming_shown), len(upcoming), UPCOMING_LIMIT)
+    past_limit_note = render_limit_note(len(past_shown), len(past), PAST_LIMIT)
 
     page = PAGE_TEMPLATE
     page = page.replace("__CAL_NAME__", html.escape(cal_name))
     page = page.replace("__NEXT_UP_BLOCK__", next_up)
-    page = page.replace("__SCHEDULE_ROWS__", schedule)
+    page = page.replace("__SCHEDULE_ROWS__", upcoming_rows)
+    page = page.replace("__UPCOMING_LIMIT_NOTE__", upcoming_limit_note)
+    page = page.replace("__UPCOMING_COUNT__", html.escape(_plural(len(upcoming), "session")))
+    page = page.replace("__PAST_ROWS__", past_rows)
+    page = page.replace("__PAST_LIMIT_NOTE__", past_limit_note)
+    page = page.replace("__PAST_COUNT__", html.escape(_plural(len(past), "session")))
     page = page.replace("__FEED_URL__", html.escape(FEED_URL))
     page = page.replace("__WEBCAL_URL__", html.escape(webcal_url))
     page = page.replace("__GCAL_URL__", html.escape(gcal_url))
@@ -751,12 +884,15 @@ def _urlquote(s: str) -> str:
 
 
 def main():
-    events, cal_name = load_upcoming_events(ICS_FILE, TZ_NAME)
-    page = build_html(events, cal_name or DEFAULT_CAL_NAME)
+    upcoming, past, cal_name = load_events(ICS_FILE, TZ_NAME)
+    page = build_html(upcoming, past, cal_name or DEFAULT_CAL_NAME)
     os.makedirs(os.path.dirname(OUTPUT_FILE), exist_ok=True)
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         f.write(page)
-    print(f"Wrote {OUTPUT_FILE} with {min(len(events), UPCOMING_LIMIT)} upcoming session(s) listed.")
+    print(
+        f"Wrote {OUTPUT_FILE}: {len(upcoming)} upcoming session(s), "
+        f"{len(past)} past session(s)."
+    )
 
 
 if __name__ == "__main__":
