@@ -7,218 +7,395 @@ BEGIN:VEVENT
 SUMMARY:Full Cast Rehearsal
 DTSTART;TZID=Australia/Adelaide:20260802T120000
 DTEND;TZID=Australia/Adelaide:20260802T162000
-DTSTAMP:20260928T150908Z
+DTSTAMP:20261006T095545Z
 UID:4c4766ec-d017-5c3e-94b4-80f05d206091@animeisamistake.com
-DESCRIPTION:12:00–16:20 — Full Cast Rehearsal\nLocation: Rumours Cafe
- \, Lady Symon Exercise Studio\, Adelaide University\, Adelaide SA\nPump up
-  songs\, vocal and dance warm‑up\, group activity\, I’m Still Standing
-  (singing & dance)\, King Candy (singing)\, scene A2S4 “No Freaking Way
- ” with Gina\, Angus\, Joey. Tutor Kyan (ECG tute).\n\nExact location for
-  "Rumours Cafe\, Lady Symon Exercise Studio" could not be confirmed automa
- tically -- check with the committee.
-LOCATION:Rumours Cafe\, Lady Symon Exercise Studio\, Adelaide University\,
-  Adelaide SA
+DESCRIPTION:12:00–16:20 — Full Cast Rehearsal\nLocation: Rumours Main 
+ Campus\, Adelaide University\, Adelaide SA\nWarm‑up songs\, vocal & danc
+ e warm‑up\, I’m Still Standing (singing & dance)\, King Candy (singing
+ )\, Scene A2S4 “No Freaking Way”. All cast required.\n\nExact location
+  for "Rumours Main Campus" could not be confirmed automatically -- check w
+ ith the committee.
+LOCATION:Rumours Main Campus\, Adelaide University\, Adelaide SA
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:Full Cast Rehearsal
 DTSTART;TZID=Australia/Adelaide:20260805T173000
 DTEND;TZID=Australia/Adelaide:20260805T201500
-DTSTAMP:20260928T150908Z
+DTSTAMP:20261006T095545Z
 UID:4d4d6398-e6cf-5002-8207-1a1286bfbdc7@animeisamistake.com
-DESCRIPTION:17:30–20:15 — Full Cast Rehearsal\nLocation: AHMS 4050 a/b
- \, Adelaide University\, Adelaide SA\nPump up songs\, vocal and dance warm
- ‑up\, revision of Dirt Block Life and I’m Still Standing (singing)\, I
- D Tonight (singing) by Chorus\, PTSD (singing) by Chirath\, dinner break\,
-  I’m Still Standing (dance) by Chorus. Tutor Gigi (ABG tute).\n\nExact l
- ocation for "AHMS 4050 a/b" could not be confirmed automatically -- check 
- with the committee.
-LOCATION:AHMS 4050 a/b\, Adelaide University\, Adelaide SA
+DESCRIPTION:17:30–20:15 — Full Cast Rehearsal\nLocation: AHMS 4050a/b
+ \, Adelaide University\, Adelaide SA\nPump‑up songs\, revision of Dirt B
+ lock Life & I’m Still Standing (singing)\, ID Tonight (singing\, chorus)
+ \, PTSD (singing\, Chirath)\, dinner break\, I’m Still Standing (dance).
+  All cast required.\n\nExact location for "AHMS 4050a/b" could not be conf
+ irmed automatically -- check with the committee.
+LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:Full Cast Rehearsal
 DTSTART;TZID=Australia/Adelaide:20260809T120000
 DTEND;TZID=Australia/Adelaide:20260809T160000
-DTSTAMP:20260928T150908Z
+DTSTAMP:20261006T095545Z
 UID:c775e7d4-bf04-5a23-8499-ad7e9c6998fc@animeisamistake.com
-DESCRIPTION:12:00–16:00 — Full Cast Rehearsal\nLocation: SCOTT THEATRE
- \nPump up songs\, vocal and dance warm‑up\, ID Tonight (singing) revisio
- n by Chorus\, I’m Still Standing (dance/singing) with everyone\, scene A
- 1S4.2 “ID Ward”.
-LOCATION:SCOTT THEATRE
+DESCRIPTION:12:00–16:00 — Full Cast Rehearsal\nLocation: Scott Theatre
+  Main Campus\, Adelaide University\, Adelaide SA\nPump‑up songs\, ID Ton
+ ight (singing\, chorus)\, I’m Still Standing (dance/singing)\, scene A1S
+ 4.2 – ID Ward. All cast required.\n\nExact location for "Scott Theatre M
+ ain Campus" could not be confirmed automatically -- check with the committ
+ ee.
+LOCATION:Scott Theatre Main Campus\, Adelaide University\, Adelaide SA
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:Rehearsal #14
+SUMMARY:Full Cast Rehearsal
+DTSTART;TZID=Australia/Adelaide:20260812T173000
+DTEND;TZID=Australia/Adelaide:20260812T200000
+DTSTAMP:20261006T095545Z
+UID:52b29131-af81-5242-946f-600d853544b9@animeisamistake.com
+DESCRIPTION:17:30–20:00 — Full Cast Rehearsal\nLocation: AHMS 4050a/b
+ \, Adelaide University\, Adelaide SA\nAfternoon block\; details not listed
+  in fragment. All cast expected.\n\nExact location for "AHMS 4050a/b" coul
+ d not be confirmed automatically -- check with the committee.
+LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Full Cast Rehearsal
+DTSTART;TZID=Australia/Adelaide:20260816T120000
+DTEND;TZID=Australia/Adelaide:20260816T163000
+DTSTAMP:20261006T095545Z
+UID:9d7cbec6-def0-50c9-b464-25770646f080@animeisamistake.com
+DESCRIPTION:12:00–16:30 — Full Cast Rehearsal\nLocation: Scott Theatre
+  Main Campus\, Adelaide University\, Adelaide SA\nAfternoon block\; detail
+ s not listed in fragment. All cast expected.\n\nExact location for "Scott 
+ Theatre Main Campus" could not be confirmed automatically -- check with th
+ e committee.
+LOCATION:Scott Theatre Main Campus\, Adelaide University\, Adelaide SA
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Full Cast Rehearsal
+DTSTART;TZID=Australia/Adelaide:20260819T173000
+DTEND;TZID=Australia/Adelaide:20260819T200000
+DTSTAMP:20261006T095545Z
+UID:e9bd5ad9-00a0-5c09-b333-f7523780efb0@animeisamistake.com
+DESCRIPTION:17:30–20:00 — Full Cast Rehearsal\nLocation: AHMS 4050a/b
+ \, Adelaide University\, Adelaide SA\nEvening block\; details not listed i
+ n fragment. All cast expected.\n\nExact location for "AHMS 4050a/b" could 
+ not be confirmed automatically -- check with the committee.
+LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Full Cast Rehearsal
+DTSTART;TZID=Australia/Adelaide:20260823T120000
+DTEND;TZID=Australia/Adelaide:20260823T161500
+DTSTAMP:20261006T095545Z
+UID:dc621239-b809-5bd1-9fa5-731650d1ae98@animeisamistake.com
+DESCRIPTION:12:00–16:15 — Full Cast Rehearsal\nLocation: Scott Theatre
+  Main Campus\, Adelaide University\, Adelaide SA\nAfternoon block\; detail
+ s not listed in fragment. All cast expected.\n\nExact location for "Scott 
+ Theatre Main Campus" could not be confirmed automatically -- check with th
+ e committee.
+LOCATION:Scott Theatre Main Campus\, Adelaide University\, Adelaide SA
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:8 Rehearsals
+DTSTART;TZID=Australia/Adelaide:20260826T173000
+DTEND;TZID=Australia/Adelaide:20260826T203000
+DTSTAMP:20261006T095545Z
+UID:12095a38-8e3c-5436-8f3d-68ae3d7f0900@animeisamistake.com
+DESCRIPTION:17:30–20:00 — Full Cast Rehearsal\nLocation: AHMS 4050a/b
+ \, Adelaide University\, Adelaide SA\nEvening block\; details not listed i
+ n fragment. All cast expected.\n\nExact location for "AHMS 4050a/b" could 
+ not be confirmed automatically -- check with the committee.\n\n17:30–17:
+ 45 — Pump Up Songs\nLocation: AHMS 4050 a/b\, Adelaide University\, Adel
+ aide SA\nVocal + dance warm‑up for everyone.\n\nExact location for "AHMS
+  4050 a/b" could not be confirmed automatically -- check with the committe
+ e.\n\n17:45–18:30 — King Candy\nLocation: AHMS 4050 a/b\, Adelaide Uni
+ versity\, Adelaide SA\nSinging rehearsal for the chorus\; Gigi and Angus t
+ o teach.\n\nExact location for "AHMS 4050 a/b" could not be confirmed auto
+ matically -- check with the committee.\n\n17:45–18:15 — Sanitise Me\nL
+ ocation: AHMS 4050 a/b\, Adelaide University\, Adelaide SA\nSinging rehear
+ sal for Emma and Luke\; Ramona to teach.\n\nExact location for "AHMS 4050 
+ a/b" could not be confirmed automatically -- check with the committee.\n\n
+ 18:30–18:50 — A2S6 - Graduation\nLocation: AHMS 4050 a/b\, Adelaide Un
+ iversity\, Adelaide SA\nScene work with the full cast.\n\nExact location f
+ or "AHMS 4050 a/b" could not be confirmed automatically -- check with the 
+ committee.\n\n18:50–19:15 — A1S1 Vice Pres‑Keg\nLocation: AHMS 4050 
+ a/b\, Adelaide University\, Adelaide SA\nScene rehearsal for the chorus\, 
+ especially exec members.\n\nExact location for "AHMS 4050 a/b" could not b
+ e confirmed automatically -- check with the committee.\n\n19:15–19:35 
+ — Dinner\nLocation: AHMS 4050 a/b\, Adelaide University\, Adelaide SA\nE
+ xact location for "AHMS 4050 a/b" could not be confirmed automatically -- 
+ check with the committee.\n\n19:35–20:30 — Dance/Singing Revision\nLoc
+ ation: AHMS 4050 a/b\, Adelaide University\, Adelaide SA\nRevision of Rube
+ lla\, ID Tonight\, Once and For All or Dirt Block Life for everyone.\n\nEx
+ act location for "AHMS 4050 a/b" could not be confirmed automatically -- c
+ heck with the committee.
+LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA\; AHMS 4050 a/b
+ \, Adelaide University\, Adelaide SA
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:9 Rehearsals
+DTSTART;TZID=Australia/Adelaide:20260830T120000
+DTEND;TZID=Australia/Adelaide:20260830T163000
+DTSTAMP:20261006T095545Z
+UID:d3812cde-759f-59c6-b798-2ca58a0be64c@animeisamistake.com
+DESCRIPTION:12:00–16:30 — Full Cast Rehearsal\nLocation: Scott Theatre
+  Main Campus\, Adelaide University\, Adelaide SA\nAfternoon block\; detail
+ s not listed in fragment. All cast expected.\n\nExact location for "Scott 
+ Theatre Main Campus" could not be confirmed automatically -- check with th
+ e committee.\n\n12:00–12:15 — Pump Up Songs\nLocation: SCOTT THEATRE\n
+ Vocal + dance warm‑up for everyone.\n\n12:15–12:30 — I’m Still Sta
+ nding - Revision\nLocation: SCOTT THEATRE\nDance and singing revision for 
+ everyone.\n\n12:30–12:45 — King Candy/Dirt Block Life - Revision\nLoca
+ tion: SCOTT THEATRE\nRevision for everyone.\n\n12:45–14:00 — King Cand
+ y\nLocation: SCOTT THEATRE\nDance rehearsal for everyone.\n\n14:00–14:30
+  — Break\nLocation: SCOTT THEATRE\n\n14:30–15:30 — Once and For All
+ \nLocation: SCOTT THEATRE\nDance rehearsal for everyone.\n\n15:30–16:00 
+ — Tbc - Revision\nLocation: SCOTT THEATRE\nRevision for everyone.\n\n15:
+ 30–16:30 — Ward Block Tango\nLocation: SCOTT THEATRE\nDance/singing re
+ hearsal for Daniel Z\, Chenuli\, Maddy\, Laila\, Hannah D\, Jesse\, Darren
+  and others\; Ramona and Angus to teach.
+LOCATION:Scott Theatre Main Campus\, Adelaide University\, Adelaide SA\; S
+ COTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:14 Rehearsals
+DTSTART;TZID=Australia/Adelaide:20260906T113000
+DTEND;TZID=Australia/Adelaide:20260906T173000
+DTSTAMP:20261006T095545Z
+UID:de639f30-a677-58e4-a888-27f2faecc1e4@animeisamistake.com
+DESCRIPTION:11:30–12:00 — The Greatest Row (soloists)\nLocation: SCOTT
+  THEATRE\nSoloists only\; exec and chorus leaders please.\n\n12:00–16:30
+  — Full Cast Rehearsal\nLocation: Scott Theatre Main Campus\, Adelaide U
+ niversity\, Adelaide SA\nAfternoon block\; details not listed in fragment.
+  All cast expected.\n\nExact location for "Scott Theatre Main Campus" coul
+ d not be confirmed automatically -- check with the committee.\n\n12:00–1
+ 2:15 — Pump Up Songs\nLocation: SCOTT THEATRE\nVocal + dance warm‑up f
+ or everyone.\n\n12:15–12:30 — The Greatest Row - Revision\nLocation: S
+ COTT THEATRE\nRevision for everyone.\n\n12:30–13:00 — A1S1 Vice Pres
+ ‑Keg\nLocation: SCOTT THEATRE\nScene rehearsal.\n\n13:00–13:30 — Kin
+ g Candy - Revision\nLocation: SCOTT THEATRE\n\n13:30–14:00 — Rubella -
+  Revision\nLocation: SCOTT THEATRE\n\n14:00–14:30 — ID Tonight - Revis
+ ion\nLocation: SCOTT THEATRE\n\n14:30–15:00 — Break\nLocation: SCOTT T
+ HEATRE\n\n15:00–15:30 — Dirt Block Life - Revision\nLocation: SCOTT TH
+ EATRE\nEveryone.\n\n15:30–16:00 — Once and For All - Revision\nLocatio
+ n: SCOTT THEATRE\nEveryone.\n\n16:00–16:30 — I’m Still Standing - Re
+ vision\nLocation: SCOTT THEATRE\nEveryone.\n\n16:30–17:00 — A1S6.1 Get
+  Piped\nLocation: SCOTT THEATRE\n\n17:00–17:30 — Ward Block Tango / Sa
+ nitise Me - Revision\nLocation: SCOTT THEATRE\nParticipants: Daniel Z\, Ch
+ enuli\, Maddy\, Laila\, Hannah D\, Jesse\, Darren\, Angus\, Emily\; plus E
+ mma J\, Lara\, Maddy\, Sienna\, Alana W\, Emma M\, Luke.
+LOCATION:SCOTT THEATRE\; Scott Theatre Main Campus\, Adelaide University\,
+  Adelaide SA
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:9 Rehearsals
+DTSTART;TZID=Australia/Adelaide:20260909T173000
+DTEND;TZID=Australia/Adelaide:20260909T200000
+DTSTAMP:20261006T095545Z
+UID:ad38f798-50a4-5d2e-964e-a8391bf43636@animeisamistake.com
+DESCRIPTION:17:30–20:00 — Full Cast Rehearsal\nLocation: AHMS 4050a/b
+ \, Adelaide University\, Adelaide SA\nEvening block\; details not listed i
+ n fragment. All cast expected.\n\nExact location for "AHMS 4050a/b" could 
+ not be confirmed automatically -- check with the committee.\n\n17:30–17:
+ 45 — Pump Up Songs\nLocation: AHMS\nVocal + dance warm‑up for everyone
+ .\n\n17:45–18:30 — King Candy - Revision\nLocation: AHMS\nRevision for
+  the chorus.\n\n17:45–18:15 — Sanitise Me\nLocation: AHMS\nDance/singi
+ ng rehearsal for Luke and Emma J.\n\n18:30–19:00 — A1S5 Competition Sc
+ ene 1\nLocation: AHMS\nScene rehearsal with everyone.\n\n19:00–19:20 —
+  Dinner\nLocation: AHMS\n\n19:20–19:50 — Once and For All\nLocation: A
+ HMS\nDance/singing rehearsal.\n\n19:20–20:00 — A2S2 Vanellope can’t 
+ trust anyone + PTSD\nLocation: AHMS\nScene rehearsal with Gina\, Angus\, C
+ hirath\; Gina can leave for Rubella.\n\n19:35–20:00 — Rubella\nLocatio
+ n: AHMS\nDance/singing rehearsal.
+LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA\; AHMS
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Full Cast Rehearsal
 DTSTART;TZID=Australia/Adelaide:20260916T173000
 DTEND;TZID=Australia/Adelaide:20260916T203000
-DTSTAMP:20260928T150908Z
+DTSTAMP:20261006T095545Z
 UID:6438d210-5005-5f81-b322-e5e00d35c8ea@animeisamistake.com
-DESCRIPTION:17:30–20:30 — Rehearsal #14\nLocation: AHMS\n17:30-17:45Pu
- mp Up Songs (Vocal + Dance Warm Up) for everyone\; 17:45-18:00Revision of 
- The Greatest Row\; 17:45-19:00Revision + Scene work including Ward Block T
- ango and A1S2 Therapy\; 18:00-18:30Singing/Dancing Dirt Block Life\; 18:30
- -19:00Singing/Dancing King Candy\; 19:00-19:30Revision of A2S3 Santise… 
- Who?\; 19:30-19:50Dinner\; 19:50-20:15Scene work A2S1 Mindcraft\; 20:15-20
- :30Additional scenes (Competition Scene 2).
-LOCATION:AHMS
+DESCRIPTION:17:30–20:30 — Full Cast Rehearsal\nLocation: AHMS 4050a/b
+ \, Adelaide University\, Adelaide SA\nEvening block\; details not listed i
+ n fragment. All cast expected.\n\nExact location for "AHMS 4050a/b" could 
+ not be confirmed automatically -- check with the committee.
+LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:ACT 1 RUN-THROUGH
+SUMMARY:Full Cast Rehearsal
 DTSTART;TZID=Australia/Adelaide:20260920T120000
 DTEND;TZID=Australia/Adelaide:20260920T163000
-DTSTAMP:20260928T150908Z
+DTSTAMP:20261006T095545Z
 UID:749577df-7e21-56e6-a1b6-e7ab92930af8@animeisamistake.com
-DESCRIPTION:12:00–16:30 — ACT 1 RUN-THROUGH\nLocation: Union House 12-
- 1/Exercise Studio 1-4:30\, Adelaide University\, Adelaide SA\n12:00-12:15 
- Pump Up Songs (Vocal + Dance Warm Up) for everyone\; 12:15-14:30 Full ACT 
- 1 run‑through\; 14:30-15:00 Break\; 15:00-16:30 Finish ACT 1 run‑throu
- gh and any additional revision.\n\nExact location for "Union House 12-1/Ex
- ercise Studio 1-4:30" could not be confirmed automatically -- check with t
- he committee.
-LOCATION:Union House 12-1/Exercise Studio 1-4:30\, Adelaide University\, A
- delaide SA
+DESCRIPTION:12:00–16:30 — Full Cast Rehearsal\nLocation: Union House/E
+ xercise Studio\, Adelaide University\, Adelaide SA\nAfternoon block\; deta
+ ils not listed in fragment. All cast expected.\n\nExact location for "Unio
+ n House/Exercise Studio" could not be confirmed automatically -- check wit
+ h the committee.
+LOCATION:Union House/Exercise Studio\, Adelaide University\, Adelaide SA
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:ACT 2 RUN-THROUGH
+SUMMARY:Full Cast Rehearsal
 DTSTART;TZID=Australia/Adelaide:20260930T173000
 DTEND;TZID=Australia/Adelaide:20260930T203000
-DTSTAMP:20260928T150908Z
+DTSTAMP:20261006T095545Z
 UID:5017b137-6dee-5a61-b24c-7ba7475340ac@animeisamistake.com
-DESCRIPTION:17:30–20:30 — ACT 2 RUN-THROUGH\nLocation: AHMS\n17:30-17:
- 45Pump Up Songs (Vocal + Dance Warm Up) for everyone\; 17:45-19:00Full ACT
-  2 run‑through\; 19:00-19:20 Break\; 19:20-20:30 Finish ACT 2 run‑thro
- ugh and any other revision.
-LOCATION:AHMS
+DESCRIPTION:17:30–20:30 — Full Cast Rehearsal\nLocation: AHMS 4050a/b
+ \, Adelaide University\, Adelaide SA\nEvening block\; details not listed i
+ n fragment. All cast expected.\n\nExact location for "AHMS 4050a/b" could 
+ not be confirmed automatically -- check with the committee.
+LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:SITZPROBE
+SUMMARY:Full Cast Rehearsal
 DTSTART;TZID=Australia/Adelaide:20261004T120000
 DTEND;TZID=Australia/Adelaide:20261004T170000
-DTSTAMP:20260928T150908Z
+DTSTAMP:20261006T095545Z
 UID:b79ad7f9-fd38-5e02-9fe7-d82a6256e5fd@animeisamistake.com
-DESCRIPTION:12:00–17:00 — SITZPROBE\nLocation: Union House 12-1/Exerci
- se Studio 1-5/?Rumours if we don’t want to move\, Adelaide University\, 
- Adelaide SA\n12:00-12:15 Pump Up Songs (Vocal Warm Up) for everyone\; 12:1
- 5-14:30 Work on The Greatest Row\, King Candy\, Rubella\, ID Tonight\, Dir
- t Block Life with everyone\; 14:30-15:00 Break (Free pizza)\; 15:00-15:30 
- Once and For All and I’m Still Standing with everyone\; 15:30-17:00 Ward
-  Block Tango\, Teach Her a Lesson\, PTSD\, Sanitise Me\, Me and the Knife 
- – anyone in these songs please stay.\n\nExact location for "Union House 
- 12-1/Exercise Studio 1-5/?Rumours if we don’t want to move" could not be
-  confirmed automatically -- check with the committee.
-LOCATION:Union House 12-1/Exercise Studio 1-5/?Rumours if we don’t want 
- to move\, Adelaide University\, Adelaide SA
+DESCRIPTION:12:00–17:00 — Full Cast Rehearsal\nLocation: Union House/E
+ xercise Studio\, Adelaide University\, Adelaide SA\nAfternoon block\; deta
+ ils not listed in fragment. All cast expected.\n\nExact location for "Unio
+ n House/Exercise Studio" could not be confirmed automatically -- check wit
+ h the committee.
+LOCATION:Union House/Exercise Studio\, Adelaide University\, Adelaide SA
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:Rehearsal #18
+SUMMARY:Full Cast Rehearsal
 DTSTART;TZID=Australia/Adelaide:20261007T173000
 DTEND;TZID=Australia/Adelaide:20261007T200000
-DTSTAMP:20260928T150908Z
+DTSTAMP:20261006T095545Z
 UID:14af3bce-8c00-52dc-8b8a-053c22854f6d@animeisamistake.com
-DESCRIPTION:17:30–20:00 — Rehearsal #18\nLocation: AHMS\n17:30-17:45Pu
- mp Up Songs (Vocal + Dance Warm Up) – details TBC\; 17:45-18:00Additiona
- l segment – TBC\; rest of schedule marked TBC\, dinner planned later.
-LOCATION:AHMS
+DESCRIPTION:17:30–20:00 — Full Cast Rehearsal\nLocation: AHMS 4050a/b
+ \, Adelaide University\, Adelaide SA\nEvening block\; details not listed i
+ n fragment. All cast expected.\n\nExact location for "AHMS 4050a/b" could 
+ not be confirmed automatically -- check with the committee.
+LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Full Show Run-Through
+DTSTART;TZID=Australia/Adelaide:20261011T120000
+DTEND;TZID=Australia/Adelaide:20261011T163000
+DTSTAMP:20261006T095545Z
+UID:7958fe02-f16a-53a5-a14c-0fb48e5586c3@animeisamistake.com
+DESCRIPTION:12:00–16:30 — Full Show Run-Through\nLocation: Union House
+ /Exercise Studio\, Adelaide University\, Adelaide SA\nWarm‑up (12:00‑1
+ 2:15) with pump‑up songs\, then ACT 1 (12:15‑14:30)\, break (14:30
+ ‑15:00)\, ACT 2 (15:00‑16:30). Full cast required.\n\nExact location
+  for "Union House/Exercise Studio" could not be confirmed automatically --
+  check with the committee.
+LOCATION:Union House/Exercise Studio\, Adelaide University\, Adelaide SA
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:Dress Rehearsal
 DTSTART;TZID=Australia/Adelaide:20261013T170000
 DTEND;TZID=Australia/Adelaide:20261013T220000
-DTSTAMP:20260928T150908Z
+DTSTAMP:20261006T095545Z
 UID:7f8beb29-56fc-53aa-a5d5-e2c58cfe1aa4@animeisamistake.com
-DESCRIPTION:17:00–22:00 — Dress Rehearsal\nLocation: SCOTT THEATRE\nMa
- y run later\; will try to get everyone home as early as possible.
+DESCRIPTION:17:00–22:00 — Dress Rehearsal\nLocation: SCOTT THEATRE\nEv
+ ening dress rehearsal\; may run later but aim to finish by 10 pm.
 LOCATION:SCOTT THEATRE
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:Dress Rehearsal
 DTSTART;TZID=Australia/Adelaide:20261014T170000
 DTEND;TZID=Australia/Adelaide:20261014T220000
-DTSTAMP:20260928T150908Z
+DTSTAMP:20261006T095545Z
 UID:c4df8e6d-e6b0-5393-8424-4659480b9664@animeisamistake.com
-DESCRIPTION:17:00–22:00 — Dress Rehearsal\nLocation: SCOTT THEATRE\nMa
- y run later\; will try to get everyone home as early as possible.
+DESCRIPTION:17:00–22:00 — Dress Rehearsal\nLocation: SCOTT THEATRE\nEv
+ ening dress rehearsal\; may run later but aim to finish by 10 pm.
 LOCATION:SCOTT THEATRE
+END:VEVENT
+BEGIN:VEVENT
+SUMMARY:Show Day 1
+DTSTART;TZID=Australia/Adelaide:20261016T120000
+DTEND;TZID=Australia/Adelaide:20261016T233000
+DTSTAMP:20261006T095545Z
+UID:46694cef-4b08-5441-ad72-9d6bdf41ba08@animeisamistake.com
+DESCRIPTION:12:00–23:30 — Show Day 1\nLocation: Scott Theatre Main Cam
+ pus\, Adelaide University\, Adelaide SA\nPerformance day\; runs from midda
+ y to 11:30 pm.\n\nExact location for "Scott Theatre Main Campus" could n
+ ot be confirmed automatically -- check with the committee.
+LOCATION:Scott Theatre Main Campus\, Adelaide University\, Adelaide SA
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:7 Rehearsals
 DTSTART;TZID=Australia/Adelaide:20270812T173000
 DTEND;TZID=Australia/Adelaide:20270812T200000
-DTSTAMP:20260928T150908Z
+DTSTAMP:20261006T095545Z
 UID:77ccb0a9-2987-5595-8ee4-6059b388b22c@animeisamistake.com
-DESCRIPTION:17:30–17:45 — Pump Up Songs – Vocal + Dance Warm Up\nLoc
- ation: AHMS 4050a/b\, Adelaide University\, Adelaide SA\nEveryone\n\nExact
-  location for "AHMS 4050a/b" could not be confirmed automatically -- check
-  with the committee.\n\n17:45–18:15 — Revision – ID Tonight (Singing
- /Dancing)\nLocation: AHMS 4050a/b\, Adelaide University\, Adelaide SA\nCho
- rus (vocal solos: Gina\, Angus\, Luke\, Emma J)\n\nExact location for "AHM
- S 4050a/b" could not be confirmed automatically -- check with the committe
- e.\n\n18:15–19:00 — Singing – The Greatest Row\nLocation: AHMS 4050a
- /b\, Adelaide University\, Adelaide SA\nChorus – especially all EXEC!\n
- \nExact location for "AHMS 4050a/b" could not be confirmed automatically -
- - check with the committee.\n\n19:00–19:20 — Dinner\nLocation: AHMS 40
- 50a/b\, Adelaide University\, Adelaide SA\nExact location for "AHMS 4050a/
- b" could not be confirmed automatically -- check with the committee.\n\n19
- :00–19:40 — Scene – A1S6.2 – ARMed and Ready\nLocation: AHMS 4050a
- /b\, Adelaide University\, Adelaide SA\nGina\, Angus\, Devi\, Scarlett\n\n
- Exact location for "AHMS 4050a/b" could not be confirmed automatically -- 
- check with the committee.\n\n19:20–19:40 — Revision – Dirt Block Lif
- e\nLocation: AHMS 4050a/b\, Adelaide University\, Adelaide SA\nEveryone\n
- \nExact location for "AHMS 4050a/b" could not be confirmed automatically -
- - check with the committee.\n\n19:40–20:00 — Scene – A1S6.2 – ARMe
- d and Ready (with chorus)\nLocation: AHMS 4050a/b\, Adelaide University\, 
- Adelaide SA\nEveryone\n\nExact location for "AHMS 4050a/b" could not be co
- nfirmed automatically -- check with the committee.
+DESCRIPTION:17:30–17:45 — Pump Up Songs / Vocal + Dance Warm Up\nLocat
+ ion: AHMS 4050a/b\, Adelaide University\, Adelaide SA\nWarm‑up for every
+ one.\n\nExact location for "AHMS 4050a/b" could not be confirmed automatic
+ ally -- check with the committee.\n\n17:45–18:15 — ID Tonight - Singin
+ g/Dancing (Revision)\nLocation: AHMS 4050a/b\, Adelaide University\, Adela
+ ide SA\nChorus work\; vocal solos by Gina\, Angus\, Luke\, Emma J.\n\nExac
+ t location for "AHMS 4050a/b" could not be confirmed automatically -- chec
+ k with the committee.\n\n18:15–19:00 — The Greatest Row (Singing)\nLoc
+ ation: AHMS 4050a/b\, Adelaide University\, Adelaide SA\nChorus\, especial
+ ly all EXEC.\n\nExact location for "AHMS 4050a/b" could not be confirmed a
+ utomatically -- check with the committee.\n\n19:00–19:20 — Dinner Brea
+ k\nLocation: AHMS 4050a/b\, Adelaide University\, Adelaide SA\nExact locat
+ ion for "AHMS 4050a/b" could not be confirmed automatically -- check with 
+ the committee.\n\n19:00–19:40 — Scene – A1S6.2 ARMed and Ready\nLoca
+ tion: AHMS 4050a/b\, Adelaide University\, Adelaide SA\nGina\, Angus\, Dev
+ i\, Scarlett.\n\nExact location for "AHMS 4050a/b" could not be confirmed 
+ automatically -- check with the committee.\n\n19:20–19:40 — Revision 
+ – Dirt Block Life\nLocation: AHMS 4050a/b\, Adelaide University\, Adelai
+ de SA\nEveryone.\n\nExact location for "AHMS 4050a/b" could not be confirm
+ ed automatically -- check with the committee.\n\n19:40–20:00 — Scene 
+ – A1S6.2 ARMed and Ready (with Chorus)\nLocation: AHMS 4050a/b\, Adelaid
+ e University\, Adelaide SA\nEveryone.\n\nExact location for "AHMS 4050a/b"
+  could not be confirmed automatically -- check with the committee.
 LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA
 END:VEVENT
 BEGIN:VEVENT
 SUMMARY:7 Rehearsals
 DTSTART;TZID=Australia/Adelaide:20270816T120000
 DTEND;TZID=Australia/Adelaide:20270816T163000
-DTSTAMP:20260928T150908Z
+DTSTAMP:20261006T095545Z
 UID:9dd6cbb6-94f9-5eef-b496-a203bb398a5d@animeisamistake.com
-DESCRIPTION:12:00–12:15 — Pump Up Songs – Vocal + Dance Warm Up\nLoc
- ation: Scott Theatre\, University of Adelaide\, North Terrace Campus\, 500
-  North Terrace\, Adelaide SA 5000\, Australia\; Lady Symon Exercise Studio
- \, Lady Symon Building\, University of Adelaide\, North Terrace Campus\, 5
- 00 North Terrace\, Adelaide SA 5000\, Australia (listed as "Scott Theatre/
- Lady Symon Exercise Studio")\nEveryone\n\n12:15–13:30 — Dance – Dirt
-  Block Life\nLocation: Scott Theatre\, University of Adelaide\, North Terr
- ace Campus\, 500 North Terrace\, Adelaide SA 5000\, Australia\; Lady Symon
-  Exercise Studio\, Lady Symon Building\, University of Adelaide\, North Te
- rrace Campus\, 500 North Terrace\, Adelaide SA 5000\, Australia (listed as
-  "Scott Theatre/Lady Symon Exercise Studio")\nChorus\n\n13:30–14:30 — 
- Singing – (Lady Symon)\nLocation: Scott Theatre\, University of Adelaide
+DESCRIPTION:12:00–12:15 — Pump Up Songs / Vocal + Dance Warm Up\nLocat
+ ion: Scott Theatre\, University of Adelaide\, North Terrace Campus\, 500 N
+ orth Terrace\, Adelaide SA 5000\, Australia\; Lady Symon Exercise Studio\,
+  Lady Symon Building\, University of Adelaide\, North Terrace Campus\, 500
+  North Terrace\, Adelaide SA 5000\, Australia (listed as "Scott Theatre/La
+ dy Symon Exercise Studio")\nEveryone.\n\n12:15–13:30 — Dance Block –
+  Scott Theatre\nLocation: Scott Theatre\, University of Adelaide\, North T
+ errace Campus\, 500 North Terrace\, Adelaide SA 5000\, Australia\; Lady Sy
+ mon Exercise Studio\, Lady Symon Building\, University of Adelaide\, North
+  Terrace Campus\, 500 North Terrace\, Adelaide SA 5000\, Australia (listed
+  as "Scott Theatre/Lady Symon Exercise Studio")\nDirt Block Life\, Chorus.
+ \n\n13:30–14:30 — Singing – Lady Symon\nLocation: Scott Theatre\, Un
+ iversity of Adelaide\, North Terrace Campus\, 500 North Terrace\, Adelaide
+  SA 5000\, Australia\; Lady Symon Exercise Studio\, Lady Symon Building\, 
+ University of Adelaide\, North Terrace Campus\, 500 North Terrace\, Adelai
+ de SA 5000\, Australia (listed as "Scott Theatre/Lady Symon Exercise Studi
+ o")\nEveryone.\n\n14:30–15:00 — Break\nLocation: Scott Theatre\, Unive
+ rsity of Adelaide\, North Terrace Campus\, 500 North Terrace\, Adelaide SA
+  5000\, Australia\; Lady Symon Exercise Studio\, Lady Symon Building\, Uni
+ versity of Adelaide\, North Terrace Campus\, 500 North Terrace\, Adelaide 
+ SA 5000\, Australia (listed as "Scott Theatre/Lady Symon Exercise Studio")
+ \nDance troupe to begin “Me and the Knife”.\n\n15:00–15:30 — Scene
+  – A2S5 Competition 2\nLocation: Scott Theatre\, University of Adelaide
  \, North Terrace Campus\, 500 North Terrace\, Adelaide SA 5000\, Australia
  \; Lady Symon Exercise Studio\, Lady Symon Building\, University of Adelai
  de\, North Terrace Campus\, 500 North Terrace\, Adelaide SA 5000\, Austral
- ia (listed as "Scott Theatre/Lady Symon Exercise Studio")\n\n14:30–15:00
-  — Break – Once and For All\nLocation: Scott Theatre\, University of A
- delaide\, North Terrace Campus\, 500 North Terrace\, Adelaide SA 5000\, Au
- stralia\; Lady Symon Exercise Studio\, Lady Symon Building\, University of
-  Adelaide\, North Terrace Campus\, 500 North Terrace\, Adelaide SA 5000\, 
- Australia (listed as "Scott Theatre/Lady Symon Exercise Studio")\nEveryone
-  (especially Ashley\, Bella\, Emma G\, Gigi\, Holly\, Lily\, Rosa\, Rancis
- \, Gina)\n\n15:00–15:30 — Scene – A2S5 Competition 2 (I’m Still St
- anding?)\nLocation: Scott Theatre\, University of Adelaide\, North Terrace
-  Campus\, 500 North Terrace\, Adelaide SA 5000\, Australia\; Lady Symon Ex
- ercise Studio\, Lady Symon Building\, University of Adelaide\, North Terra
- ce Campus\, 500 North Terrace\, Adelaide SA 5000\, Australia (listed as "S
- cott Theatre/Lady Symon Exercise Studio")\nChirath\, Darshi\, Aneri\, King
-  Candy\, Bella\, Lara\, Ashley\, Gigi\, Emma J\, Luke\, Angus\, Gina\, Emm
- a G\, Sarah\, Lily K\, Duncan\, Wynchell + ALL CHORUS\n\n15:30–16:00 —
-  Scene – A2S3 Geris ward (Sanitise… who?)\nLocation: Scott Theatre\, U
- niversity of Adelaide\, North Terrace Campus\, 500 North Terrace\, Adelaid
- e SA 5000\, Australia\; Lady Symon Exercise Studio\, Lady Symon Building\,
-  University of Adelaide\, North Terrace Campus\, 500 North Terrace\, Adela
- ide SA 5000\, Australia (listed as "Scott Theatre/Lady Symon Exercise Stud
- io")\nLuke\, Emma J\, Aneri\, Emma M\, Emina\, Hannah D\, Jocelyn\, Lily G
- \n\n15:30–16:30 — Revision – The Greatest Row\, Dirt Block Life\, I
- ’m Still Standing (if time permits)\nLocation: Scott Theatre\, Universit
- y of Adelaide\, North Terrace Campus\, 500 North Terrace\, Adelaide SA 500
- 0\, Australia\; Lady Symon Exercise Studio\, Lady Symon Building\, Univers
- ity of Adelaide\, North Terrace Campus\, 500 North Terrace\, Adelaide SA 5
- 000\, Australia (listed as "Scott Theatre/Lady Symon Exercise Studio")\nEv
- eryone
+ ia (listed as "Scott Theatre/Lady Symon Exercise Studio")\nCast: Chirath\,
+  Darshi\, Aneri\, King Candy\, Bella\, Lara\, Ashley\, Gigi\, Emma J\, Luk
+ e\, Angus\, Gina\, Emma G\, Sarah\, Lily K\, Duncan\, Wynchell + ALL CHORU
+ S.\n\n15:30–16:00 — Scene – A2S3 Geris ward\nLocation: Scott Theatre
+ \, University of Adelaide\, North Terrace Campus\, 500 North Terrace\, Ade
+ laide SA 5000\, Australia\; Lady Symon Exercise Studio\, Lady Symon Buildi
+ ng\, University of Adelaide\, North Terrace Campus\, 500 North Terrace\, A
+ delaide SA 5000\, Australia (listed as "Scott Theatre/Lady Symon Exercise 
+ Studio")\nLuke\, Emma J\, Aneri\, Emma M\, Emina\, Hannah D\, Jocelyn\, Li
+ ly G.\n\n15:30–16:30 — Revision – Various Numbers\nLocation: Scott T
+ heatre\, University of Adelaide\, North Terrace Campus\, 500 North Terrace
+ \, Adelaide SA 5000\, Australia\; Lady Symon Exercise Studio\, Lady Symon 
+ Building\, University of Adelaide\, North Terrace Campus\, 500 North Terra
+ ce\, Adelaide SA 5000\, Australia (listed as "Scott Theatre/Lady Symon Exe
+ rcise Studio")\nThe Greatest Row\, Dirt Block Life\, I’m Still Standing 
+ – singing/dance if time permits. Everyone.
 LOCATION:Scott Theatre\, University of Adelaide\, North Terrace Campus\, 5
  00 North Terrace\, Adelaide SA 5000\, Australia\; Lady Symon Exercise Stud
  io\, Lady Symon Building\, University of Adelaide\, North Terrace Campus\,
@@ -229,139 +406,46 @@ BEGIN:VEVENT
 SUMMARY:6 Rehearsals
 DTSTART;TZID=Australia/Adelaide:20270819T173000
 DTEND;TZID=Australia/Adelaide:20270819T203000
-DTSTAMP:20260928T150908Z
+DTSTAMP:20261006T095545Z
 UID:18434104-e042-5557-a4d6-258d61acfb51@animeisamistake.com
-DESCRIPTION:17:30–17:45 — Pump Up Songs – Vocal + Dance Warm Up\nLoc
- ation: AHMS 4050a/b\, Adelaide University\, Adelaide SA\nEveryone\n\nExact
-  location for "AHMS 4050a/b" could not be confirmed automatically -- check
-  with the committee.\n\n17:45–18:30 — Singing – Once and For All\nLo
- cation: AHMS 4050a/b\, Adelaide University\, Adelaide SA\nEveryone (especi
- ally Ashley\, Bella\, Emma G\, Gigi\, Holly\, Lily\, Lara\, Sarah\, Gina)
+DESCRIPTION:17:30–17:45 — Pump Up Songs / Vocal + Dance Warm Up\nLocat
+ ion: AHMS 4050a/b\, Adelaide University\, Adelaide SA\nEveryone.\n\nExact 
+ location for "AHMS 4050a/b" could not be confirmed automatically -- check 
+ with the committee.\n\n17:45–18:30 — Singing – Once and For All\nLoc
+ ation: AHMS 4050a/b\, Adelaide University\, Adelaide SA\nEveryone\, especi
+ ally Ashley\, Bella\, Emma G\, Gigi\, Holly\, Lily\, Lara\, Sarah\, Gina.
  \n\nExact location for "AHMS 4050a/b" could not be confirmed automatically
   -- check with the committee.\n\n18:30–19:00 — Revision – The Greate
- st Row\, Rubella\nLocation: AHMS 4050a/b\, Adelaide University\, Adelaide 
- SA\nChorus\n\nExact location for "AHMS 4050a/b" could not be confirmed aut
- omatically -- check with the committee.\n\n19:00–19:20 — Dinner\nLocat
- ion: AHMS 4050a/b\, Adelaide University\, Adelaide SA\nExact location for 
- "AHMS 4050a/b" could not be confirmed automatically -- check with the comm
- ittee.\n\n19:20–19:40 — Revision – PTSD (singing)\nLocation: AHMS 40
- 50a/b\, Adelaide University\, Adelaide SA\nAngus\, Chirath\n\nExact locati
+ st Row / Rubella\nLocation: AHMS 4050a/b\, Adelaide University\, Adelaide 
+ SA\nChorus.\n\nExact location for "AHMS 4050a/b" could not be confirmed au
+ tomatically -- check with the committee.\n\n19:00–19:20 — Dinner Break
+ \nLocation: AHMS 4050a/b\, Adelaide University\, Adelaide SA\nExact locati
  on for "AHMS 4050a/b" could not be confirmed automatically -- check with t
- he committee.\n\n19:20–20:30 — Singing – King Candy\nLocation: AHMS 
- 4050a/b\, Adelaide University\, Adelaide SA\nChorus (especially Joey\, Emm
- a G\, Sarah\, Lily\, Alana W\, Charli)\n\nExact location for "AHMS 4050a/b
- " could not be confirmed automatically -- check with the committee.
+ he committee.\n\n19:20–19:40 — Revision – PTSD (singing)\nLocation: 
+ AHMS 4050a/b\, Adelaide University\, Adelaide SA\nAngus\, Chirath.\n\nExac
+ t location for "AHMS 4050a/b" could not be confirmed automatically -- chec
+ k with the committee.\n\n19:20–20:30 — Singing – King Candy\nLocatio
+ n: AHMS 4050a/b\, Adelaide University\, Adelaide SA\nChorus\, especially J
+ oey\, Emma G\, Sarah\, Lily\, Alana W\, Charli. Ramona and Gina stay to te
+ ach.\n\nExact location for "AHMS 4050a/b" could not be confirmed automatic
+ ally -- check with the committee.
 LOCATION:AHMS 4050a/b\, Adelaide University\, Adelaide SA
 END:VEVENT
 BEGIN:VEVENT
-SUMMARY:7 Rehearsals
+SUMMARY:8 Rehearsals
 DTSTART;TZID=Australia/Adelaide:20270823T120000
-DTEND;TZID=Australia/Adelaide:20270823T163000
-DTSTAMP:20260928T150908Z
+DTEND;TZID=Australia/Adelaide:20270823T164500
+DTSTAMP:20261006T095545Z
 UID:5a098fe7-5569-5f5c-a765-c1815ff33c5a@animeisamistake.com
-DESCRIPTION:12:00–12:15 — Pump Up Songs – Vocal + Dance Warm Up\nLoc
- ation: SCOTT THEATRE\nEveryone\n\n12:15–12:40 — Scene – A1S4.1 AMSS 
- in Chaos\nLocation: SCOTT THEATRE\nExec\n\n12:40–13:40 — Learn Dance/S
- inging Revision – The Greatest Row\nLocation: SCOTT THEATRE\nChorus\n\n1
- 3:40–14:30 — Singing – King Candy\nLocation: SCOTT THEATRE\n\n14:30
- –15:00 — Break\nLocation: SCOTT THEATRE\n\n15:00–15:20 — Scene –
-  A1S1 Vice Pres-Keg\nLocation: SCOTT THEATRE\nChorus – especially exec\n
- \n15:20–16:30 — Learn Dance/Singing Revision – Rubella\nLocation: SC
- OTT THEATRE\nChorus
+DESCRIPTION:12:00–12:15 — Pump Up Songs / Vocal + Dance Warm Up\nLocat
+ ion: SCOTT THEATRE\nEveryone.\n\n12:15–12:40 — Scene – A1S4.1 AMSS i
+ n Chaos\nLocation: SCOTT THEATRE\nExec.\n\n12:40–13:40 — Learn Dance /
+  Singing Revision\nLocation: SCOTT THEATRE\n\n13:40–14:30 — The Greate
+ st Row (Singing)\nLocation: SCOTT THEATRE\nChorus.\n\n14:30–15:00 — Br
+ eak\nLocation: SCOTT THEATRE\n\n15:00–15:20 — Scene – A1S1 Vice Pres
+ ‑Keg\nLocation: SCOTT THEATRE\nChorus\, especially exec.\n\n15:20–16:3
+ 0 — Learn Dance / Singing Revision\nLocation: SCOTT THEATRE\n\n16:30–1
+ 6:45 — Scene – Rubella\nLocation: SCOTT THEATRE\nChorus.
 LOCATION:SCOTT THEATRE
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:7 Rehearsals
-DTSTART;TZID=Australia/Adelaide:20270826T173000
-DTEND;TZID=Australia/Adelaide:20270826T203000
-DTSTAMP:20260928T150908Z
-UID:e052da45-556d-593d-83f6-98e98dc1caf5@animeisamistake.com
-DESCRIPTION:17:30–17:45 — Pump Up Songs\nLocation: AHMS 4050 a/b\, Ade
- laide University\, Adelaide SA\nVocal + dance warm‑up for everyone.\n\nE
- xact location for "AHMS 4050 a/b" could not be confirmed automatically -- 
- check with the committee.\n\n17:45–18:30 — King Candy (singing)\nLocat
- ion: AHMS 4050 a/b\, Adelaide University\, Adelaide SA\nChorus rehearses\;
-  Gigi and Angus to teach.\n\nExact location for "AHMS 4050 a/b" could not 
- be confirmed automatically -- check with the committee.\n\n17:45–18:15 
- — Sanitise Me (singing)\nLocation: AHMS 4050 a/b\, Adelaide University\,
-  Adelaide SA\nEmma and Luke\; Ramona to teach.\n\nExact location for "AHMS
-  4050 a/b" could not be confirmed automatically -- check with the committe
- e.\n\n18:30–18:50 — A2S6 – Graduation (scene)\nLocation: AHMS 4050 a
- /b\, Adelaide University\, Adelaide SA\nFull cast.\n\nExact location for "
- AHMS 4050 a/b" could not be confirmed automatically -- check with the comm
- ittee.\n\n18:50–19:15 — A1S1 Vice Pres‑Keg (scene)\nLocation: AHMS 4
- 050 a/b\, Adelaide University\, Adelaide SA\nChorus\, especially execs.\n
- \nExact location for "AHMS 4050 a/b" could not be confirmed automatically 
- -- check with the committee.\n\n19:15–19:35 — Dinner\nLocation: AHMS 4
- 050 a/b\, Adelaide University\, Adelaide SA\nExact location for "AHMS 4050
-  a/b" could not be confirmed automatically -- check with the committee.\n
- \n19:35–20:30 — A1S6.1 Mario GI Ward (scene)\nLocation: AHMS 4050 a/b
- \, Adelaide University\, Adelaide SA\nParticipants: Gina\, Angus\, Chirath
- \, etc.\; end of block.\n\nExact location for "AHMS 4050 a/b" could not be
-  confirmed automatically -- check with the committee.
-LOCATION:AHMS 4050 a/b\, Adelaide University\, Adelaide SA
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:8 Rehearsals
-DTSTART;TZID=Australia/Adelaide:20270830T120000
-DTEND;TZID=Australia/Adelaide:20270830T163000
-DTSTAMP:20260928T150908Z
-UID:b3a6f17e-6042-565a-9cc2-d95e8b87d1a7@animeisamistake.com
-DESCRIPTION:12:00–12:15 — Pump Up Songs\nLocation: SCOTT THEATRE\nVoca
- l + dance warm‑up for everyone.\n\n12:15–12:30 — I’m Still Standin
- g – Revision\nLocation: SCOTT THEATRE\nDancing and singing for everyone.
- \n\n12:30–12:45 — King Candy / Dirt Block Life – Revision\nLocation:
-  SCOTT THEATRE\nEveryone.\n\n12:45–14:00 — King Candy – Dance\nLocat
- ion: SCOTT THEATRE\nFull cast.\n\n14:00–14:30 — Break\nLocation: SCOTT
-  THEATRE\n\n14:30–15:30 — Once and For All – Dance\nLocation: SCOTT 
- THEATRE\nEveryone.\n\n15:30–16:00 — TBC – Revision\nLocation: SCOTT 
- THEATRE\nEveryone.\n\n15:30–16:30 — Ward Block Tango – Dance/Singing
- \nLocation: SCOTT THEATRE\nParticipants: Daniel Z\, Chenuli\, Maddy\, Lail
- a\, Hannah D\, Jesse\, Darren\; plus Emma J\, Lara\, Maddy\, Sienna\, Alan
- a\, Emma M. Ramona and Angus to teach (+ Katherine and Sienna for timing).
-LOCATION:SCOTT THEATRE
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:12 Rehearsals
-DTSTART;TZID=Australia/Adelaide:20270906T113000
-DTEND;TZID=Australia/Adelaide:20270906T170000
-DTSTAMP:20260928T150908Z
-UID:b68ca077-8fb8-5a00-a49e-221a9a01f354@animeisamistake.com
-DESCRIPTION:11:30–12:00 — Soloists Only – The Greatest Row\nLocation
- : SCOTT THEATRE\nExec and chorus leaders only.\n\n12:00–12:15 — Pump U
- p Songs\nLocation: SCOTT THEATRE\nVocal + dance warm‑up for everyone.\n
- \n12:15–12:30 — The Greatest Row – Revision\nLocation: SCOTT THEATRE
- \nEveryone.\n\n12:30–13:00 — King Candy – Revision\nLocation: SCOTT 
- THEATRE\nEveryone.\n\n13:00–13:30 — Rubella – Revision\nLocation: SC
- OTT THEATRE\nEveryone.\n\n13:30–14:00 — ID Tonight – Revision\nLocat
- ion: SCOTT THEATRE\nEveryone.\n\n14:00–14:30 — Break\nLocation: SCOTT 
- THEATRE\n\n14:30–15:00 — Dirt Block Life – Revision\nLocation: SCOTT
-  THEATRE\nEveryone.\n\n15:00–15:30 — Once and For All – Revision\nLo
- cation: SCOTT THEATRE\nEveryone.\n\n15:30–16:00 — I’m Still Standing
-  – Revision\nLocation: SCOTT THEATRE\nEveryone.\n\n16:00–16:30 — A1S
- 6.1 Get Piped – Scene\nLocation: SCOTT THEATRE\n\n16:30–17:00 — Ward
-  Block Tango / Sanitise Me – Revision\nLocation: SCOTT THEATRE\nParticip
- ants: Daniel Z\, Chenuli\, Maddy\, Laila\, Hannah D\, Jesse\, Darren\, Ang
- us\, Emily\; plus Emma J\, Lara\, Maddy\, Sienna\, Alana W\, Emma M\, Luke
- .
-LOCATION:SCOTT THEATRE
-END:VEVENT
-BEGIN:VEVENT
-SUMMARY:8 Rehearsals
-DTSTART;TZID=Australia/Adelaide:20270909T173000
-DTEND;TZID=Australia/Adelaide:20270909T200000
-DTSTAMP:20260928T150908Z
-UID:9d8478bb-4598-5a21-a73f-ef4e23860c33@animeisamistake.com
-DESCRIPTION:17:30–17:45 — Pump Up Songs\nLocation: AHMS\nVocal + dance
-  warm‑up for everyone.\n\n17:45–18:30 — King Candy – Revision\nLoc
- ation: AHMS\nChorus\; vocal soloists may leave to learn solos.\n\n17:45–
- 18:15 — Sanitise Me – Dance/Singing\nLocation: AHMS\nLuke\, Emma J.\n
- \n18:30–19:00 — A1S5 Competition Scene 1\nLocation: AHMS\nFull cast.\n
- \n19:00–19:20 — Dinner\nLocation: AHMS\n\n19:20–19:50 — Once and F
- or All – Dance/Singing\nLocation: AHMS\n\n19:20–20:00 — A2S2 Vanello
- pe can’t trust anyone + PTSD – Scene\nLocation: AHMS\nGina\, Angus\, C
- hirath\; Gina can leave for Rubella.\n\n19:35–20:00 — Rubella – Danc
- e/Singing\nLocation: AHMS
-LOCATION:AHMS
 END:VEVENT
 END:VCALENDAR
